@@ -15,4 +15,4 @@ include_directories(
 )
 
 add_executable(lidar_pub src/lidar_pub.cpp)
-target_link_libraries(lidar_pub ${catkin_LIBRARIES} ydlidar_sdk)
+target_link_libraries(lidar_pub ${catkin_LIBRARIES})
