@@ -1,7 +1,0 @@
-<launch>
-
-  <node name="pub_node" pkg="lidar_pub" type="std_pub" output="screen"/>
-  
-  <node name="sub_node" pkg="lidar_pub" type="std_sub" output="screen"/>
-
-</launch>

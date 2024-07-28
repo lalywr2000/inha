@@ -3,8 +3,10 @@ project(lidar_pub)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  std_msgs
+  sensor_msgs
 )
+
+find_package(ydlidar_sdk REQUIRED)
 
 catkin_package()
 
@@ -12,8 +14,5 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(std_pub src/std_pub.cpp)
-target_link_libraries(std_pub ${catkin_LIBRARIES})
-
-add_executable(std_sub src/std_sub.cpp)
-target_link_libraries(std_sub ${catkin_LIBRARIES})
+add_executable(lidar_pub src/lidar_pub.cpp)
+target_link_libraries(lidar_pub ${catkin_LIBRARIES})

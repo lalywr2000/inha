@@ -1,0 +1,5 @@
+<launch>
+
+  <node name="lidar_pub_node" pkg="lidar_pub" type="lidar_pub" output="screen"/>
+
+</launch>
