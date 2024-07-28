@@ -10,7 +10,7 @@ int int_optval;
 float float_optval;
 bool bool_optval;
 
-// CYdLidar laser;
+CYdLidar laser;
 // LaserScan scan;
 
 sensor_msgs::LaserScan msg;
