@@ -2,20 +2,20 @@
 #include "sensor_msgs/LaserScan.h"
 #include "src/CYdLidar.h"
 
-// #include <string>
-// #include <vector>
+#include <string>
+#include <vector>
 
-// std::string str_optval;
-// int int_optval;
-// float float_optval;
-// bool bool_optval;
+std::string str_optval;
+int int_optval;
+float float_optval;
+bool bool_optval;
 
 // CYdLidar laser;
 // LaserScan scan;
 
-// sensor_msgs::LaserScan msg;
+sensor_msgs::LaserScan msg;
 
-// std::size_t point_size;
+std::size_t point_size;
 
 int main(int argc, char **argv) {
   // ros::init(argc, argv, "lidar_pub_node");
