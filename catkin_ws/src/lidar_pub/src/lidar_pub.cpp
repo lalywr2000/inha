@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
   laser.setlidaropt(LidarPropScanFrequency, &float_optval, sizeof(float));
   int_optval = 5;
   laser.setlidaropt(LidarPropSampleRate, &int_optval, sizeof(int));
-  bool_optval = false;
+  bool_optval = true;
   laser.setlidaropt(LidarPropSingleChannel, &bool_optval, sizeof(bool));
   float_optval = 180.0f;
   laser.setlidaropt(LidarPropMaxAngle, &float_optval, sizeof(float));
@@ -62,6 +62,8 @@ int main(int argc, char **argv) {
 
   while (ros::ok()) {
     if(laser.doProcessSimple(scan)) {
+      // msg.header.stamp.sec = RCL_NS_TO_S(scan.stamp);
+      // msg.header.stamp.nanosec =  scan.stamp - RCL_S_TO_NS(msg.header.stamp.sec);
       msg.angle_increment = scan.config.angle_increment;
       msg.time_increment = scan.config.time_increment;
       msg.scan_time = scan.config.scan_time;
