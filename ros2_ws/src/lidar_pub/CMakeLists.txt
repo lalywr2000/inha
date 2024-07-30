@@ -21,13 +21,18 @@ include_directories(
   ${YDLIDAR_SDK_INCLUDE_DIRS})
 
 
-add_executable(lidar_pub src/lidar_pub.cpp)
-ament_target_dependencies(lidar_pub rclcpp sensor_msgs)
-target_link_libraries(lidar_pub ${YDLIDAR_SDK_LIBRARIES})
+add_executable(lidar_pub_1 src/lidar_pub_1.cpp)
+ament_target_dependencies(lidar_pub_1 rclcpp sensor_msgs)
+target_link_libraries(lidar_pub_1 ${YDLIDAR_SDK_LIBRARIES})
+
+add_executable(lidar_pub_2 src/lidar_pub_2.cpp)
+ament_target_dependencies(lidar_pub_2 rclcpp sensor_msgs)
+target_link_libraries(lidar_pub_2 ${YDLIDAR_SDK_LIBRARIES})
 
 
 install(TARGETS
-  lidar_pub
+  lidar_pub_1
+  lidar_pub_2
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
