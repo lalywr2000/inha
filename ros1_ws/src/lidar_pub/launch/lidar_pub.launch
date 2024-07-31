@@ -1,5 +1,7 @@
 <launch>
 
-  <node name="lidar_pub_node" pkg="lidar_pub" type="lidar_pub" output="screen"/>
+  <node name="lidar_pub_1_node" pkg="lidar_pub" type="lidar_pub_1" output="screen"/>
+
+  <node name="lidar_pub_2_node" pkg="lidar_pub" type="lidar_pub_2" output="screen"/>
 
 </launch>

@@ -18,12 +18,12 @@ sensor_msgs::LaserScan msg;
 std::size_t point_size;
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "lidar_pub_node");
+  ros::init(argc, argv, "lidar_pub_2_node");
   ros::NodeHandle n;
-  ros::Publisher pub = n.advertise<sensor_msgs::LaserScan>("scan", 1);
+  ros::Publisher pub = n.advertise<sensor_msgs::LaserScan>("scan_2", 1);
   ros::Rate loop_rate(15);
 
-  str_optval = "/dev/ttyUSB0";
+  str_optval = "/dev/lidar_2";
   laser.setlidaropt(LidarPropSerialPort, str_optval.c_str(), str_optval.size());
   int_optval = 128000;
   laser.setlidaropt(LidarPropSerialBaudrate, &int_optval, sizeof(int));
@@ -62,8 +62,6 @@ int main(int argc, char **argv) {
 
   while (ros::ok()) {
     if(laser.doProcessSimple(scan)) {
-      // msg.header.stamp.sec = RCL_NS_TO_S(scan.stamp);
-      // msg.header.stamp.nanosec =  scan.stamp - RCL_S_TO_NS(msg.header.stamp.sec);
       msg.angle_increment = scan.config.angle_increment;
       msg.time_increment = scan.config.time_increment;
       msg.scan_time = scan.config.scan_time;
