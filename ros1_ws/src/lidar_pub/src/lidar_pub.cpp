@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "lidar_pub_node");
   ros::NodeHandle n;
   ros::Publisher pub = n.advertise<sensor_msgs::LaserScan>("scan", 1);
-  ros::Rate loop_rate(10);
+  ros::Rate loop_rate(15);
 
   str_optval = "/dev/ttyUSB0";
   laser.setlidaropt(LidarPropSerialPort, str_optval.c_str(), str_optval.size());
