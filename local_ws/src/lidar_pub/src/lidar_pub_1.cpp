@@ -51,7 +51,7 @@ class LidarPublisher : public rclcpp::Node
 
       if(laser.doProcessSimple(scan))
       {
-        msg.header.frame_id = "laser";
+        msg.header.frame_id = "laser_1";
         msg.angle_min = scan.config.min_angle;
         msg.angle_max = scan.config.max_angle;
         msg.range_min = scan.config.min_range;
@@ -81,7 +81,7 @@ class LidarPublisher : public rclcpp::Node
         msg.ranges.resize(point_size);
         for(size_t i = 0; i < point_size; i++)
         {
-          msg.ranges[i] = scan.points[(point_size - i - 1 + 40) % point_size].range;  // Change Orientation
+          msg.ranges[i] = scan.points[(point_size - i - 1 + 50) % point_size].range;  // Change Orientation
         }
 
         publisher_->publish(msg);
