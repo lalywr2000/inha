@@ -14,14 +14,14 @@ using namespace std::chrono_literals;
 class LidarPublisher : public rclcpp::Node
 {
   public:
-    LidarPublisher() : Node("lidar_pub_2_node")
+    LidarPublisher() : Node("lidar_pub_1_node")
     {
-      publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>("scan_2", 10);
+      publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>("scan_1", 10);
       timer_ = this->create_wall_timer(
         10ms, std::bind(&LidarPublisher::callback, this)
       );
 
-      str_optval = "/dev/lidar_2";
+      str_optval = "/dev/ttyUSB0";
       laser.setlidaropt(LidarPropSerialPort, str_optval.c_str(), str_optval.size());
       int_optval = 128000;
       laser.setlidaropt(LidarPropSerialBaudrate, &int_optval, sizeof(int));

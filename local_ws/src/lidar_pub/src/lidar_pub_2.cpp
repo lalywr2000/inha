@@ -14,14 +14,14 @@ using namespace std::chrono_literals;
 class LidarPublisher : public rclcpp::Node
 {
   public:
-    LidarPublisher() : Node("lidar_pub_1_node")
+    LidarPublisher() : Node("lidar_pub_2_node")
     {
-      publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>("scan_1", 10);
+      publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>("scan_2", 10);
       timer_ = this->create_wall_timer(
         10ms, std::bind(&LidarPublisher::callback, this)
       );
 
-      str_optval = "/dev/lidar_1";
+      str_optval = "/dev/ttyUSB1";
       laser.setlidaropt(LidarPropSerialPort, str_optval.c_str(), str_optval.size());
       int_optval = 128000;
       laser.setlidaropt(LidarPropSerialBaudrate, &int_optval, sizeof(int));
@@ -81,7 +81,7 @@ class LidarPublisher : public rclcpp::Node
         msg.ranges.resize(point_size);
         for(size_t i = 0; i < point_size; i++)
         {
-          msg.ranges[i] = scan.points[(point_size - i - 1 + 40) % point_size].range;  // Change Orientation
+          msg.ranges[i] = scan.points[(point_size - i - 1 + 50) % point_size].range;  // Change Orientation
         }
 
         publisher_->publish(msg);
