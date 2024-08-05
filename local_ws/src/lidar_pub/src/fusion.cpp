@@ -4,180 +4,124 @@
 
 #include <string>
 #include <vector>
-#include <chrono>
-
-using namespace std::chrono_literals;
-
-
-class LidarPublisher : public rclcpp::Node
-{
-  public:
-    LidarPublisher() : Node("lidar_pub_1_node")
-    {
-      publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>("scan_1", 10);
-      timer_ = this->create_wall_timer(
-        10ms, std::bind(&LidarPublisher::callback, this)
-      );
-
-      str_optval = "/dev/ttyUSB0";
-      laser.setlidaropt(LidarPropSerialPort, str_optval.c_str(), str_optval.size());
-      int_optval = 128000;
-      laser.setlidaropt(LidarPropSerialBaudrate, &int_optval, sizeof(int));
-      int_optval = TYPE_TRIANGLE;
-      laser.setlidaropt(LidarPropLidarType, &int_optval, sizeof(int));
-      int_optval = YDLIDAR_TYPE_SERIAL;
-      laser.setlidaropt(LidarPropDeviceType, &int_optval, sizeof(int));
-      float_optval = 10.0f;
-      laser.setlidaropt(LidarPropScanFrequency, &float_optval, sizeof(float));
-      int_optval = 5;
-      laser.setlidaropt(LidarPropSampleRate, &int_optval, sizeof(int));
-      bool_optval = true;
-      laser.setlidaropt(LidarPropSingleChannel, &bool_optval, sizeof(bool));
-      float_optval = 180.0f;
-      laser.setlidaropt(LidarPropMaxAngle, &float_optval, sizeof(float));
-      float_optval = -180.0f;
-      laser.setlidaropt(LidarPropMinAngle, &float_optval, sizeof(float));
-      float_optval = 10.0f;
-      laser.setlidaropt(LidarPropMaxRange, &float_optval, sizeof(float));
-      float_optval = 0.12f;
-      laser.setlidaropt(LidarPropMinRange, &float_optval, sizeof(float));
-      bool_optval = false;
-      laser.setlidaropt(LidarPropIntenstiy, &bool_optval, sizeof(bool));
-
-      laser.initialize();
-      laser.turnOn();
-
-      if(laser.doProcessSimple(scan))
-      {
-        msg.header.frame_id = "laser_1";
-        msg.angle_min = scan.config.min_angle;
-        msg.angle_max = scan.config.max_angle;
-        msg.range_min = scan.config.min_range;
-        msg.range_max = scan.config.max_range;
-        msg.intensities.resize(0);
-      }
-    }
-
-    ~LidarPublisher()
-    {
-      laser.turnOff();
-      laser.disconnecting();
-    }
-
-  private:
-    void callback()
-    {
-      if(laser.doProcessSimple(scan))
-      {
-        msg.header.stamp.sec = RCL_NS_TO_S(scan.stamp);
-        msg.header.stamp.nanosec =  scan.stamp - RCL_S_TO_NS(msg.header.stamp.sec);
-        msg.angle_increment = scan.config.angle_increment;
-        msg.time_increment = scan.config.time_increment;
-        msg.scan_time = scan.config.scan_time;
-
-        point_size = scan.points.size();
-        msg.ranges.resize(point_size);
-        for(size_t i = 0; i < point_size; i++)
-        {
-          msg.ranges[i] = scan.points[(point_size - i - 1 + 50) % point_size].range;  // Change Orientation
-        }
-
-        publisher_->publish(msg);
-        // RCLCPP_INFO(this->get_logger(), "");
-      }
-    }
-
-    rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr publisher_;
-    rclcpp::TimerBase::SharedPtr timer_;
-
-    std::string str_optval;
-    int int_optval;
-    float float_optval;
-    bool bool_optval;
-
-    CYdLidar laser;
-
-    LaserScan scan;
-    sensor_msgs::msg::LaserScan msg;
-
-    size_t point_size;
-};
-
-
-int main(int argc, char **argv)
-{
-  rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<LidarPublisher>());
-  rclcpp::shutdown();
-
-  return 0;
-}
-
-
-============
-
 #include <cmath>
-
-#include "rclcpp/rclcpp.hpp"
-#include "nav_msgs/msg/odometry.hpp"
-#include "tf2/LinearMath/Quaternion.h"
-#include "tf2/LinearMath/Matrix3x3.h"
 
 using std::placeholders::_1;
 
+#define VIEW_ANGLE_DEG 180.0f
 
-class OdomConverter : public rclcpp::Node
+
+sensor_msgs::msg::LaserScan scan_1;
+sensor_msgs::msg::LaserScan scan_2;
+
+bool update_1 = false;
+bool update_2 = false;
+
+
+class Fusion : public rclcpp::Node
 {
 public:
-  OdomConverter()
-  : Node("odom_converter_node")
+  Fusion()
+  : Node("fusion_node")
   {
-    subscription_ = this->create_subscription<nav_msgs::msg::Odometry>(
-      "/odom", 10, std::bind(&OdomConverter::topic_callback, this, _1));
+    subscription_1 = this->create_subscription<sensor_msgs::msg::LaserScan>(
+      "/scan_1", 1, std::bind(&Fusion::topic_callback_1, this, _1));
 
-    publication_ = this->create_publisher<nav_msgs::msg::Odometry>(
-      "/piracer/odom", 10);
+    subscription_2 = this->create_subscription<sensor_msgs::msg::LaserScan>(
+      "/scan_2", 1, std::bind(&Fusion::topic_callback_2, this, _1));
+
+    publication_ = this->create_publisher<sensor_msgs::msg::LaserScan>(
+      "/fusion", 1);
+
+    fusion_data.header.frame_id = "laser_fusion";
+    fusion_data.angle_min = -180.0f;
+    fusion_data.angle_max = 180.0f;
+    fusion_data.range_min = 0.12f;
+    fusion_data.range_max = 10.0f;
+    fusion_data.intensities.resize(0);
   }
 
 private:
-  void topic_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
+  void fusion_pub()
   {
-    nav_msgs::msg::Odometry position;
+    temp.resize(0);
+    point_size_1 = scan_1.ranges.size();
+    point_size_2 = scan_2.ranges.size();
 
-    position.header.frame_id = "odom";
-    position.child_frame_id = "base_footprint";
+    idx = 0;
+    for (float val = 0.0f; val <= VIEW_ANGLE_DEG * 3.14159f / 180.0f; val += scan_1.angle_increment)
+    {
+      temp.push_back(scan_1.ranges[(idx + (int)(point_size_1 * VIEW_ANGLE_DEG / 720.0f)) % point_size_1]);
+      idx++;
+    }
 
-    /*==================================================*/
+    idx = 0;
+    for (float val = 0.0f; val <= VIEW_ANGLE_DEG * 3.14159f / 180.0f; val += scan_2.angle_increment)
+    {
+      temp.push_back(scan_2.ranges[(idx + (int)(point_size_2 * VIEW_ANGLE_DEG / 720.0f)) % point_size_2]);
+      idx++;
+    }
 
-    tf2::Quaternion q(
-      msg->pose.pose.orientation.x,
-      msg->pose.pose.orientation.y,
-      msg->pose.pose.orientation.z,
-      msg->pose.pose.orientation.w);
-    tf2::Matrix3x3 m(q);
-    double roll, pitch, yaw;
-    m.getRPY(roll, pitch, yaw);  // [rad]
+    fusion_data.ranges.resize(0);
+    temp_size = temp.size();
 
-    position.pose.pose.position.x = msg->pose.pose.position.x - 0.095 * cos(yaw);  // [m]
-    position.pose.pose.position.y = msg->pose.pose.position.y - 0.095 * sin(yaw);  // [m]
+    for (size_t i = 0; i < temp_size; i++)
+    {
+      fusion_data.ranges.push_back(temp[(temp_size + i - 293) % temp_size]);
+    }
 
-    /*==================================================*/
+    fusion_data.angle_increment = 3.14159f * 2.0f / temp_size;
 
-    position.pose.pose.position.z = 0.0;
-    position.pose.pose.orientation = msg->pose.pose.orientation;
-
-    publication_->publish(position);
+    publication_->publish(fusion_data);
+    // RCLCPP_INFO(this->get_logger(), "");
   }
 
-  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr subscription_;
-  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr publication_;
+  void topic_callback_1(const sensor_msgs::msg::LaserScan::SharedPtr msg)
+  {
+    scan_1.ranges = msg->ranges;
+    scan_1.angle_increment = msg->angle_increment;
+    update_1 = true;
+
+    if (update_1 && update_2)
+    {
+      fusion_pub();
+
+      update_1 = false;
+      update_2 = false;
+    }
+  }
+
+  void topic_callback_2(const sensor_msgs::msg::LaserScan::SharedPtr msg)
+  {
+    scan_2.ranges = msg->ranges;
+    scan_2.angle_increment = msg->angle_increment;
+    update_2 = true;
+
+    if (update_1 && update_2)
+    {
+      fusion_pub();
+
+      update_1 = false;
+      update_2 = false;
+    }
+  }
+
+  rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_1;
+  rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_2;
+  rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr publication_;
+
+  sensor_msgs::msg::LaserScan fusion_data;
+  std::vector<float> temp;
+  size_t point_size_1, point_size_2, temp_size;
+  int idx;
 };
 
 
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<OdomConverter>());
+  rclcpp::spin(std::make_shared<Fusion>());
   rclcpp::shutdown();
+
   return 0;
 }

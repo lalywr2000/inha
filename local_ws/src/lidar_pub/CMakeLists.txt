@@ -29,10 +29,14 @@ add_executable(lidar_pub_2 src/lidar_pub_2.cpp)
 ament_target_dependencies(lidar_pub_2 rclcpp sensor_msgs)
 target_link_libraries(lidar_pub_2 ${YDLIDAR_SDK_LIBRARIES})
 
+add_executable(fusion src/fusion.cpp)
+ament_target_dependencies(fusion rclcpp sensor_msgs)
+
 
 install(TARGETS
   lidar_pub_1
   lidar_pub_2
+  fusion
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY

@@ -16,7 +16,7 @@ class LidarPublisher : public rclcpp::Node
   public:
     LidarPublisher() : Node("lidar_pub_2_node")
     {
-      publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>("scan_2", 10);
+      publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>("scan_2", 1);
       timer_ = this->create_wall_timer(
         10ms, std::bind(&LidarPublisher::callback, this)
       );
