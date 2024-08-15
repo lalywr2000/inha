@@ -20,3 +20,6 @@ target_link_libraries(lidar_pub_1 ${catkin_LIBRARIES} ${YDLIDAR_SDK_LIBRARIES})
 
 add_executable(lidar_pub_2 src/lidar_pub_2.cpp)
 target_link_libraries(lidar_pub_2 ${catkin_LIBRARIES} ${YDLIDAR_SDK_LIBRARIES})
+
+add_executable(fusion src/fusion.cpp)
+target_link_libraries(fusion ${catkin_LIBRARIES})
