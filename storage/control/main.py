@@ -60,7 +60,7 @@ if __name__ == '__main__':
 
             elif LH > 0 and LV == 0:
                 speed = math.sqrt(LV ** 2.0 + LH ** 2.0) * 5.0
-                angle = 45.0
+                angle = 0.0
 
                 if RH > 0:
                     print("direction 3 clockwise rotation")
