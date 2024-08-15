@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
   laser.turnOn();
 
   if(laser.doProcessSimple(scan)) {
-    msg.header.frame_id = "laser";
+    msg.header.frame_id = "laser_1";
     msg.angle_min = scan.config.min_angle;
     msg.angle_max = scan.config.max_angle;
     msg.range_min = scan.config.min_range;
