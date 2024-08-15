@@ -6,6 +6,8 @@
 
 #define VIEW_ANGLE_DEG 180.0f
 
+ros::Publisher publication_;
+
 sensor_msgs::LaserScan scan_1;
 sensor_msgs::LaserScan scan_2;
 sensor_msgs::LaserScan fusion_data;
@@ -47,13 +49,13 @@ void fusion_pub() {
 
   fusion_data.angle_increment = 3.14159f * 2.0f / temp_size;
 
-  pub.publish(msg);
+  publication_.publish(fusion_data);
   // ROS_INFO("Published!");
 }
 
-void topic_callback_1(const sensor_msgs::LaserScan::SharedPtr msg) {
-  scan_1.ranges = msg->ranges;
-  scan_1.angle_increment = msg->angle_increment;
+void topic_callback_1(const sensor_msgs::LaserScan msg) {
+  scan_1.ranges = msg.ranges;
+  scan_1.angle_increment = msg.angle_increment;
   update_1 = true;
 
   if (update_1 && update_2) {
@@ -64,9 +66,9 @@ void topic_callback_1(const sensor_msgs::LaserScan::SharedPtr msg) {
   }
 }
 
-void topic_callback_2(const sensor_msgs::LaserScan::SharedPtr msg) {
-  scan_2.ranges = msg->ranges;
-  scan_2.angle_increment = msg->angle_increment;
+void topic_callback_2(const sensor_msgs::LaserScan msg) {
+  scan_2.ranges = msg.ranges;
+  scan_2.angle_increment = msg.angle_increment;
   update_2 = true;
 
   if (update_1 && update_2) {
@@ -82,7 +84,8 @@ int main(int argc, char **argv) {
   ros::NodeHandle n;
   ros::Subscriber subscription_1 = n.subscribe("/scan_1", 1, topic_callback_1);
   ros::Subscriber subscription_2 = n.subscribe("/scan_2", 1, topic_callback_2);
-  ros::Publisher publication_ = n.advertise<sensor_msgs::LaserScan>("/fusion", 1);
+  // ros::Publisher publication_ = n.advertise<sensor_msgs::LaserScan>("/fusion", 1);
+  publication_ = n.advertise<sensor_msgs::LaserScan>("/fusion", 1);
 
   fusion_data.header.frame_id = "laser_fusion";
   fusion_data.angle_min = -180.0f;
