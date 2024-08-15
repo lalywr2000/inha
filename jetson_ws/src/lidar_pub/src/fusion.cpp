@@ -44,7 +44,7 @@ void fusion_pub() {
 
   for (size_t i = 0; i < temp_size; i++)
   {
-    fusion_data.ranges.push_back(temp[(temp_size + i - 293) % temp_size]);
+    fusion_data.ranges.push_back(temp[(temp_size + i - 65) % temp_size]);
   }
 
   fusion_data.angle_increment = 3.14159f * 2.0f / temp_size;
