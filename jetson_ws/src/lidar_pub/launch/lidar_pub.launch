@@ -3,7 +3,7 @@
   <node name="lidar_pub_2_node" pkg="lidar_pub" type="lidar_pub_2" output="screen" />
   <node name="fusion_node" pkg="lidar_pub" type="fusion" output="screen" />
 
-  <node name="tf_pub_1_node" pkg="tf" type="static_transform_publisher" args="0.415 0 0 0 0 0 base_link laser_1 100" />
-  <node name="tf_pub_2_node" pkg="tf" type="static_transform_publisher" args="-0.415 0 0 3.14159 0 0 base_link laser_2 100" />
-  <node name="tf_pub_3_node" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 base_link laser_fusion 100" />
+  <node name="tf_pub_1_node" pkg="tf" type="static_transform_publisher" args="0.415 0 0 0 0 0 base_link laser_1 1000" />
+  <node name="tf_pub_2_node" pkg="tf" type="static_transform_publisher" args="-0.415 0 0 3.14159 0 0 base_link laser_2 1000" />
+  <node name="tf_pub_3_node" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 base_link laser_fusion 1000" />
 </launch>
