@@ -43,6 +43,10 @@ add_dependencies(line_extraction_ros laser_line_extraction_generate_messages_cpp
 add_executable(line_extraction_node src/line_extraction_node.cpp)
 target_link_libraries(line_extraction_node line_extraction_ros ${catkin_LIBRARIES})
 
+add_executable(processing src/processing.cpp)
+target_link_libraries(processing ${catkin_LIBRARIES})
+add_dependencies(processing laser_line_extraction_generate_messages_cpp)
+
 include_directories(include ${catkin_INCLUDE_DIRS})
 include_directories(include ${EIGEN3_INCLUDE_DIRS})
 
