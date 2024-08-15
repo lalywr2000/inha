@@ -5,7 +5,7 @@
 #include <vector>
 
 void msgCallback(const laser_line_extraction::LineSegmentList msg) {
-  std::cout << msg.size() << std::endl;
+  std::cout << msg.line_segments.size() << std::endl;
   // ROS_INFO("Subscribed!");
 }
 
