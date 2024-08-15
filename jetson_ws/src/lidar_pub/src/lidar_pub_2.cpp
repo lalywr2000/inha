@@ -62,6 +62,7 @@ int main(int argc, char **argv) {
 
   while (ros::ok()) {
     if(laser.doProcessSimple(scan)) {
+      msg.header.stamp = ros::Time::now();
       msg.angle_increment = scan.config.angle_increment;
       msg.time_increment = scan.config.time_increment;
       msg.scan_time = scan.config.scan_time;
