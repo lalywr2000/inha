@@ -84,7 +84,6 @@ int main(int argc, char **argv) {
   ros::NodeHandle n;
   ros::Subscriber subscription_1 = n.subscribe("/scan_1", 1, topic_callback_1);
   ros::Subscriber subscription_2 = n.subscribe("/scan_2", 1, topic_callback_2);
-  // ros::Publisher publication_ = n.advertise<sensor_msgs::LaserScan>("/fusion", 1);
   publication_ = n.advertise<sensor_msgs::LaserScan>("/fusion", 1);
 
   fusion_data.header.frame_id = "laser_fusion";
