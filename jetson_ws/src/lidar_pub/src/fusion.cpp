@@ -48,7 +48,7 @@ void fusion_pub() {
   }
 
   // fusion_data.angle_increment = 3.14159f * 2.0f / temp_size;
-  fusion_data.angle_increment = (scan_1.angle_increment + scan_2.angle_increment) / 2.0f
+  fusion_data.angle_increment = (scan_1.angle_increment + scan_2.angle_increment) / 2.0f;
   fusion_data.header.stamp = ros::Time::now();
 
   // std::cout << scan_1.angle_increment << scan_2.angle_increment << scan_1.angle_increment << std::endl;
