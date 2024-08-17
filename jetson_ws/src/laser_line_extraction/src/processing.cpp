@@ -166,8 +166,10 @@ int main(int argc, char **argv) {
 }
 
 /*
++ draw base robot, wheels and position of lidar
 1. get nearest wall and distance of it.
 2. select appropriate distance and make control code to keep the distance.
 3. consider the angle of the wall and make it align to the wall.
 4. examine the 4 direction of the wall and follow the wall CCW.
++ AEB
 */
