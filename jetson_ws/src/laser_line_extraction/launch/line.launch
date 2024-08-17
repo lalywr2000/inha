@@ -18,4 +18,6 @@
   </node>
 
   <node name="processing_node" pkg="laser_line_extraction" type="processing" output="screen" />
+
+  <node name="tf_pub_node" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 base_link map 1000" />
 </launch>

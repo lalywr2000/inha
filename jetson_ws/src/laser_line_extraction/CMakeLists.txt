@@ -4,6 +4,7 @@ project(laser_line_extraction)
 find_package(catkin REQUIRED COMPONENTS
   cmake_modules
   geometry_msgs
+  visualization_msgs
   message_generation
   roscpp
   rospy
