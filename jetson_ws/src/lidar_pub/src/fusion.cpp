@@ -50,7 +50,7 @@ void fusion_pub() {
   fusion_data.angle_increment = 3.14159f * 2.0f / temp_size;
   fusion_data.header.stamp = ros::Time::now();
 
-  cout << scan_1.angle_increment << scan_2.angle_increment << scan_1.angle_increment << endl;
+  std::cout << scan_1.angle_increment << scan_2.angle_increment << scan_1.angle_increment << std::endl;
 
   publication_.publish(fusion_data);
   // ROS_INFO("Published!");
