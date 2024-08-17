@@ -21,6 +21,8 @@ namespace Color {
   const vector<float> GRAY    = {0.5f, 0.5f, 0.5f, 1.0f};
 }
 
+ros::Subscriber sub;
+ros::Publisher pub;
 
 vector<vector<float>> line_info;
 float x_start, y_start, x_end, y_end;
@@ -140,8 +142,8 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "processing_node");
   ros::NodeHandle n;
 
-  ros::Subscriber sub = n.subscribe("/line_segments", 1, msgCallback);
-  ros::Publisher pub = n.advertise<visualization_msgs::MarkerArray>("/vis", 1);
+  sub = n.subscribe("/line_segments", 1, msgCallback);
+  pub = n.advertise<visualization_msgs::MarkerArray>("/vis", 1);
 
   ros::spin();
 
