@@ -48,7 +48,7 @@ void fusion_pub() {
   }
 
   // fusion_data.angle_increment = 3.14159f * 2.0f / temp_size;
-  fusion_data.angle_increment = 0.0f
+  fusion_data.angle_increment = 0.0f;
   fusion_data.header.stamp = ros::Time::now();
 
   publication_.publish(fusion_data);
