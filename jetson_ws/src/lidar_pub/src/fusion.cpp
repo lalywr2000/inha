@@ -47,8 +47,10 @@ void fusion_pub() {
     fusion_data.ranges.push_back(temp[(temp_size + i - 65) % temp_size]);
   }
 
-  fusion_data.angle_increment = 3.14159f * 2.0f / temp_size;
   fusion_data.header.stamp = ros::Time::now();
+  fusion_data.angle_increment = (scan_1.angle_increment + scan_2.angle_increment) / 2.0f;
+  fusion_data.time_increment = (scan_1.time_increment + scan_2.time_increment) / 2.0f;
+  fusion_data.scan_time = (scan_1.scan_time + scan_2.scan_time) / 2.0f;
 
   publication_.publish(fusion_data);
   // ROS_INFO("Published!");
@@ -57,6 +59,8 @@ void fusion_pub() {
 void topic_callback_1(const sensor_msgs::LaserScan msg) {
   scan_1.ranges = msg.ranges;
   scan_1.angle_increment = msg.angle_increment;
+  scan_1.time_increment = msg.time_increment;
+  scan_1.scan_time = msg.scan_time;
   update_1 = true;
 
   if (update_1 && update_2) {
@@ -70,9 +74,9 @@ void topic_callback_1(const sensor_msgs::LaserScan msg) {
 void topic_callback_2(const sensor_msgs::LaserScan msg) {
   scan_2.ranges = msg.ranges;
   scan_2.angle_increment = msg.angle_increment;
+  scan_2.time_increment = msg.time_increment;
+  scan_2.scan_time = msg.scan_time;
   update_2 = true;
-
-  std::cout << msg.time_increment << "   " << msg.scan_time << std::endl;
 
   if (update_1 && update_2) {
     fusion_pub();
