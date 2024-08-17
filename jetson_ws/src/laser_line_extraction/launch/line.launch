@@ -3,7 +3,7 @@
     <param name="~frequency" value="30.0" />
     <param name="~frame_id" value="laser_fusion" />
     <param name="~scan_topic" value="fusion" />
-    <param name="~publish_markers" value="true" />
+    <param name="~publish_markers" value="false" />
     <param name="~bearing_std_dev" value="1e-5" />
     <param name="~range_std_dev" value="0.012" />
     <param name="~least_sq_angle_thresh" value="0.0001" />
