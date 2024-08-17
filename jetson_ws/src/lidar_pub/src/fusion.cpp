@@ -47,8 +47,7 @@ void fusion_pub() {
     fusion_data.ranges.push_back(temp[(temp_size + i - 65) % temp_size]);
   }
 
-  // fusion_data.angle_increment = 3.14159f * 2.0f / temp_size;
-  fusion_data.angle_increment = 0.0f;
+  fusion_data.angle_increment = 3.14159f * 2.0f / temp_size;
   fusion_data.header.stamp = ros::Time::now();
 
   publication_.publish(fusion_data);
@@ -72,6 +71,8 @@ void topic_callback_2(const sensor_msgs::LaserScan msg) {
   scan_2.ranges = msg.ranges;
   scan_2.angle_increment = msg.angle_increment;
   update_2 = true;
+
+  std::cout << msg.time_increment << "   " << msg.scan_time << std::endl;
 
   if (update_1 && update_2) {
     fusion_pub();
