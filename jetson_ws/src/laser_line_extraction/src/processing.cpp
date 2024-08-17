@@ -11,8 +11,11 @@ using namespace std;
 vector<vector<float>> line_info;
 float x_start, y_start, x_end, y_end;
 
-float getDist(float x1, float y1, float x2, float y2) {
-  return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+float getLineDist(float x1, float y1, float x2, float y2) {
+  float incline = (y2 - y1) / (x2 - x1);
+  float intercept = y1 - incline * x1;
+
+  return abs(intercept) / sqrt(incline * incline + 1.0f);
 }
 
 void msgCallback(const laser_line_extraction::LineSegmentList msg) {
@@ -27,7 +30,7 @@ void msgCallback(const laser_line_extraction::LineSegmentList msg) {
       x_end = msg.line_segments[i].end[0];
       y_end = msg.line_segments[i].end[1];
 
-      line_info.push_back({getDist(x_start, y_start, x_end, y_end), x_start, y_start, x_end, y_end});
+      line_info.push_back({getLineDist(x_start, y_start, x_end, y_end), x_start, y_start, x_end, y_end});
     }
 
     sort(line_info.begin(), line_info.end(), [](const vector<float>& a, const vector<float>& b) { return a[0] < b[0]; });
@@ -58,8 +61,6 @@ int main(int argc, char **argv) {
 
   return 0;
 }
-
-
 
 /*
 1. get nearest wall and distance of it.
