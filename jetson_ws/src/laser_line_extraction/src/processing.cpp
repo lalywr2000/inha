@@ -27,7 +27,10 @@ ros::Publisher visualize_;
 vector<vector<float>> line_info;
 visualization_msgs::MarkerArray marker_array;
 
-float x_start, y_start, x_end, y_end, dist, len;
+float x_start_temp, y_start_temp, x_end_temp, y_end_temp;
+float x_start, y_start, x_end, y_end;
+float dist, len;
+
 bool update_1 = false;
 bool update_2 = false;
 
@@ -119,21 +122,27 @@ void visualize() {
 
   visualize_.publish(marker_array);
 
-  line_info.clear();
   marker_array.markers.clear();
 }
 
 void topic_callback_1(const laser_line_extraction::LineSegmentList msg) {
   if (msg.line_segments.size() > 0) {
-    for (int i = 0; i < msg.line_segments.size(); i++) {
-      x_start = msg.line_segments[i].start[0];
-      y_start = msg.line_segments[i].start[1];
-      x_end = msg.line_segments[i].end[0];
-      y_end = msg.line_segments[i].end[1];
+    line_info.clear();
 
-      if (isnan(x_start) || isnan(y_start) || isnan(x_end) || isnan(y_end)) {
+    for (int i = 0; i < msg.line_segments.size(); i++) {
+      x_start_temp = msg.line_segments[i].start[0];
+      y_start_temp = msg.line_segments[i].start[1];
+      x_end_temp = msg.line_segments[i].end[0];
+      y_end_temp = msg.line_segments[i].end[1];
+
+      if (isnan(x_start_temp) || isnan(y_start_temp) || isnan(x_end_temp) || isnan(y_end_temp)) {
         continue;
       }
+
+      x_start = y_start_temp;
+      y_start = -1.0f * x_start_temp - 0.415f;
+      x_end = y_end_temp;
+      y_end = -1.0f * x_end_temp - 0.415f;
 
       dist = getLineDist(x_start, y_start, x_end, y_end);
       len = getDist(x_start, y_start, x_end, y_end);
@@ -147,7 +156,7 @@ void topic_callback_1(const laser_line_extraction::LineSegmentList msg) {
       sort(line_info.begin(), line_info.end(), [](const vector<float>& a, const vector<float>& b) { return a[0] < b[0]; });
 
       for (int i = 0; i < line_info.size(); i++) {
-        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::WHITE, 0.1f);
+        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::YELLOW, 0.1f);
       }
     }
   }
@@ -164,15 +173,22 @@ void topic_callback_1(const laser_line_extraction::LineSegmentList msg) {
 
 void topic_callback_2(const laser_line_extraction::LineSegmentList msg) {
   if (msg.line_segments.size() > 0) {
-    for (int i = 0; i < msg.line_segments.size(); i++) {
-      x_start = msg.line_segments[i].start[0];
-      y_start = msg.line_segments[i].start[1];
-      x_end = msg.line_segments[i].end[0];
-      y_end = msg.line_segments[i].end[1];
+    line_info.clear();
 
-      if (isnan(x_start) || isnan(y_start) || isnan(x_end) || isnan(y_end)) {
+    for (int i = 0; i < msg.line_segments.size(); i++) {
+      x_start_temp = msg.line_segments[i].start[0];
+      y_start_temp = msg.line_segments[i].start[1];
+      x_end_temp = msg.line_segments[i].end[0];
+      y_end_temp = msg.line_segments[i].end[1];
+
+      if (isnan(x_start_temp) || isnan(y_start_temp) || isnan(x_end_temp) || isnan(y_end_temp)) {
         continue;
       }
+
+      x_start = -1.0f * y_start_temp;
+      y_start = x_start_temp + 0.415f;
+      x_end = -1.0f * y_end_temp;
+      y_end = x_end_temp + 0.415f;
 
       dist = getLineDist(x_start, y_start, x_end, y_end);
       len = getDist(x_start, y_start, x_end, y_end);
@@ -186,7 +202,7 @@ void topic_callback_2(const laser_line_extraction::LineSegmentList msg) {
       sort(line_info.begin(), line_info.end(), [](const vector<float>& a, const vector<float>& b) { return a[0] < b[0]; });
 
       for (int i = 0; i < line_info.size(); i++) {
-        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::WHITE, 0.1f);
+        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::ORANGE, 0.1f);
       }
     }
   }
@@ -202,7 +218,6 @@ void topic_callback_2(const laser_line_extraction::LineSegmentList msg) {
 }
 
 int main(int argc, char **argv) {
-  line_info.clear();
   marker_array.markers.clear();
   
   ros::init(argc, argv, "processing_node");
@@ -219,6 +234,7 @@ int main(int argc, char **argv) {
 
 
 /*
+meet the position and orientation and than cut the side. if both start and end point is beyond boundary, than ignore it.
 1. get nearest wall and distance of it.
 2. select appropriate distance and make control code to keep the distance.
 3. consider the angle of the wall and make it align to the wall.
