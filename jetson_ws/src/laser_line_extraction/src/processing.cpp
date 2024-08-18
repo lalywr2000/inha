@@ -117,7 +117,7 @@ float getLineDist(float x1, float y1, float x2, float y2) {
 void visualize() {
   visualizePoint({0.0f, 0.0f}, Color::ORANGE, 0.2f);  // visualize ego vehilcle here !!!
 
-  visualize.publish(marker_array);
+  visualize_.publish(marker_array);
 
   line_info.clear();
   marker_array.markers.clear();
