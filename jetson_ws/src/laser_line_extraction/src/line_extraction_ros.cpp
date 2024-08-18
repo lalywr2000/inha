@@ -15,7 +15,7 @@ LineExtractionROS::LineExtractionROS(ros::NodeHandle& nh, ros::NodeHandle& nh_lo
   data_cached_(false)
 {
   loadParameters();
-  line_publisher_ = nh_.advertise<laser_line_extraction::LineSegmentList>("line_segments", 1);
+  line_publisher_ = nh_.advertise<laser_line_extraction::LineSegmentList>(pub_topic_, 1);
   scan_subscriber_ = nh_.subscribe(scan_topic_, 1, &LineExtractionROS::laserScanCallback, this);
   if (pub_markers_)
   {
@@ -63,8 +63,12 @@ void LineExtractionROS::loadParameters()
 
   // Parameters used by this node
   
-  std::string frame_id, scan_topic;
+  std::string pub_topic, frame_id, scan_topic;
   bool pub_markers;
+
+  nh_local_.param<std::string>("pub_topic", pub_topic, "line_segments");
+  pub_topic_ = pub_topic;
+  ROS_DEBUG("pub_topic: %s", pub_topic_.c_str());
 
   nh_local_.param<std::string>("frame_id", frame_id, "laser");
   frame_id_ = frame_id;

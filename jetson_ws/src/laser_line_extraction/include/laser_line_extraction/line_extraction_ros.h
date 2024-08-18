@@ -33,6 +33,7 @@ private:
   ros::Publisher line_publisher_;
   ros::Publisher marker_publisher_;
   // Parameters
+  std::string pub_topic_;
   std::string frame_id_;
   std::string scan_topic_;
   bool pub_markers_;
