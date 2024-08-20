@@ -9,6 +9,10 @@
 #include <vector>
 #include <algorithm>
 
+#define RANGE_OF_INTEREST 5.0f
+#define MIN_WALL_LEN 1.0f
+#define DRIVE_WALL_DIST 1.3f
+
 using namespace std;
 
 namespace Color {
@@ -117,18 +121,58 @@ float getLineDist(float x1, float y1, float x2, float y2) {
   return abs(intercept) / sqrt(incline * incline + 1.0f);
 }
 
+void processing() {
+  if (line_info.size() > 0) {
+    sort(line_info.begin(), line_info.end(), [](const vector<float>& a, const vector<float>& b) { return a[0] < b[0]; });
+
+    cout << "Nearest wall dist: " << line_info[0][0] << endl;
+
+    // if (line_info[0][0] > DRIVE_WALL_DIST) {
+    //   // action
+    // } else {
+    //   // action
+    // }
+    // make situation and decision here !!! -> publish ctrl topic !!!
+  }
+
+  // if no wall is detected situation !!!
+}
+
 void visualize() {
-  visualizePoint({0.0f, 0.0f}, Color::ORANGE, 0.2f);  // visualize ego vehilcle here !!!
+  visualizeLine({0.25f, -0.35f}, {0.25f, 0.35f}, Color::WHITE, 0.05f);
+  visualizeLine({0.25f, 0.35f}, {-0.25f, 0.35f}, Color::WHITE, 0.05f);
+  visualizeLine({-0.25f, 0.35f}, {-0.25f, -0.35f}, Color::WHITE, 0.05f);
+  visualizeLine({-0.25f, -0.35f}, {0.25f, -0.35f}, Color::WHITE, 0.05f);
+
+  visualizeLine({0.21f - 0.0125f, -0.45f}, {0.25f + 0.0125f, -0.45f}, Color::GRAY, 0.1f);
+  visualizeLine({0.21f - 0.0125f, 0.45f}, {0.25f + 0.0125f, 0.45f}, Color::GRAY, 0.1f);
+  visualizeLine({-0.21f - 0.0125f, 0.45f}, {-0.25f + 0.0125f, 0.45f}, Color::GRAY, 0.1f);
+  visualizeLine({-0.21f - 0.0125f, -0.45f}, {-0.25f + 0.0125f, -0.45f}, Color::GRAY, 0.1f);
+
+  visualizePoint({0.0f, -0.415f}, Color::ORANGE, 0.07f);
+  visualizePoint({0.0f, 0.415f}, Color::ORANGE, 0.07f);
+
+  if (line_info.size() > 0) {
+    for (int i = 0; i < line_info.size(); i++) {
+      if (i == 0) {
+        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::WHITE, 0.1f);
+        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::RED, 0.5f);
+      } else {
+        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::WHITE, 0.1f);
+      }
+    }
+  }
 
   visualize_.publish(marker_array);
 
+  line_info.clear();
   marker_array.markers.clear();
 }
 
 void topic_callback_1(const laser_line_extraction::LineSegmentList msg) {
-  if (msg.line_segments.size() > 0) {
-    line_info.clear();
+  if (update_1) return;
 
+  if (msg.line_segments.size() > 0) {
     for (int i = 0; i < msg.line_segments.size(); i++) {
       x_start_temp = msg.line_segments[i].start[0];
       y_start_temp = msg.line_segments[i].start[1];
@@ -144,19 +188,15 @@ void topic_callback_1(const laser_line_extraction::LineSegmentList msg) {
       x_end = y_end_temp;
       y_end = -1.0f * x_end_temp - 0.415f;
 
+      if (y_start > -0.415f && y_end > -0.415f) {
+        continue;
+      }
+
       dist = getLineDist(x_start, y_start, x_end, y_end);
       len = getDist(x_start, y_start, x_end, y_end);
 
-      if (dist < 5.0f && len > 1.0f) {
+      if (dist < RANGE_OF_INTEREST && len > MIN_WALL_LEN) {
         line_info.push_back({dist, x_start, y_start, x_end, y_end});
-      }
-    }
-
-    if (line_info.size() > 0) {
-      sort(line_info.begin(), line_info.end(), [](const vector<float>& a, const vector<float>& b) { return a[0] < b[0]; });
-
-      for (int i = 0; i < line_info.size(); i++) {
-        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::YELLOW, 0.1f);
       }
     }
   }
@@ -164,6 +204,7 @@ void topic_callback_1(const laser_line_extraction::LineSegmentList msg) {
   update_1 = true;
 
   if (update_1 && update_2) {
+    processing();
     visualize();
 
     update_1 = false;
@@ -172,9 +213,9 @@ void topic_callback_1(const laser_line_extraction::LineSegmentList msg) {
 }
 
 void topic_callback_2(const laser_line_extraction::LineSegmentList msg) {
-  if (msg.line_segments.size() > 0) {
-    line_info.clear();
+  if (update_2) return;
 
+  if (msg.line_segments.size() > 0) {
     for (int i = 0; i < msg.line_segments.size(); i++) {
       x_start_temp = msg.line_segments[i].start[0];
       y_start_temp = msg.line_segments[i].start[1];
@@ -190,19 +231,15 @@ void topic_callback_2(const laser_line_extraction::LineSegmentList msg) {
       x_end = -1.0f * y_end_temp;
       y_end = x_end_temp + 0.415f;
 
+      if (y_start < 0.415f && y_end < 0.415f) {
+        continue;
+      }
+
       dist = getLineDist(x_start, y_start, x_end, y_end);
       len = getDist(x_start, y_start, x_end, y_end);
 
-      if (dist < 5.0f && len > 1.0f) {
+      if (dist < RANGE_OF_INTEREST && len > MIN_WALL_LEN) {
         line_info.push_back({dist, x_start, y_start, x_end, y_end});
-      }
-    }
-
-    if (line_info.size() > 0) {
-      sort(line_info.begin(), line_info.end(), [](const vector<float>& a, const vector<float>& b) { return a[0] < b[0]; });
-
-      for (int i = 0; i < line_info.size(); i++) {
-        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::ORANGE, 0.1f);
       }
     }
   }
@@ -210,6 +247,7 @@ void topic_callback_2(const laser_line_extraction::LineSegmentList msg) {
   update_2 = true;
 
   if (update_1 && update_2) {
+    processing();
     visualize();
 
     update_1 = false;
@@ -218,8 +256,6 @@ void topic_callback_2(const laser_line_extraction::LineSegmentList msg) {
 }
 
 int main(int argc, char **argv) {
-  marker_array.markers.clear();
-  
   ros::init(argc, argv, "processing_node");
   ros::NodeHandle n;
 
@@ -234,9 +270,7 @@ int main(int argc, char **argv) {
 
 
 /*
-meet the position and orientation and than cut the side. if both start and end point is beyond boundary, than ignore it.
-1. get nearest wall and distance of it.
-2. select appropriate distance and make control code to keep the distance.
+2. control to keep the distance. go find wall to certain direction and make it stop.
 3. consider the angle of the wall and make it align to the wall.
 4. examine the 4 direction of the wall and follow the wall CCW.
 */
