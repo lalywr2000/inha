@@ -154,13 +154,10 @@ void visualize() {
 
   if (line_info.size() > 0) {
     for (int i = 0; i < line_info.size(); i++) {
-      if (i == 0) {
-        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::WHITE, 0.1f);
-        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::RED, 0.08f);
-      } else {
-        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::WHITE, 0.1f);
-      }
+      visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::WHITE, 0.1f);
     }
+
+    visualizeLine({line_info[0][1], line_info[0][2]}, {line_info[0][3], line_info[0][4]}, Color::RED, 0.08f);
   }
 
   visualize_.publish(marker_array);
