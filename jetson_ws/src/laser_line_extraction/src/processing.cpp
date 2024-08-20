@@ -149,14 +149,14 @@ void visualize() {
   visualizeLine({-0.21f - 0.125f, 0.45f}, {-0.21f + 0.125f, 0.45f}, Color::GRAY, 0.1f);
   visualizeLine({-0.21f - 0.125f, -0.45f}, {-0.21f + 0.125f, -0.45f}, Color::GRAY, 0.1f);
 
-  visualizePoint({0.0f, -0.415f}, Color::BLUE, 0.1f);
-  visualizePoint({0.0f, 0.415f}, Color::BLUE, 0.1f);
+  visualizePoint({0.0f, -0.415f}, Color::BLUE, 0.08f);
+  visualizePoint({0.0f, 0.415f}, Color::BLUE, 0.08f);
 
   if (line_info.size() > 0) {
     for (int i = 0; i < line_info.size(); i++) {
       if (i == 0) {
         visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::WHITE, 0.1f);
-        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::RED, 0.5f);
+        visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::RED, 0.08f);
       } else {
         visualizeLine({line_info[i][1], line_info[i][2]}, {line_info[i][3], line_info[i][4]}, Color::WHITE, 0.1f);
       }
