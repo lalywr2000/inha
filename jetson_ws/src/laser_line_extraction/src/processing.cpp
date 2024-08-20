@@ -144,10 +144,10 @@ void visualize() {
   visualizeLine({-0.25f, 0.35f + 0.025f}, {-0.25f, -0.35f - 0.025f}, Color::WHITE, 0.05f);
   visualizeLine({-0.25f - 0.025f, -0.35f}, {0.25f + 0.025f, -0.35f}, Color::WHITE, 0.05f);
 
-  visualizeLine({0.21f - 0.0125f, -0.45f}, {0.25f + 0.0125f, -0.45f}, Color::GRAY, 0.1f);
-  visualizeLine({0.21f - 0.0125f, 0.45f}, {0.25f + 0.0125f, 0.45f}, Color::GRAY, 0.1f);
-  visualizeLine({-0.21f - 0.0125f, 0.45f}, {-0.25f + 0.0125f, 0.45f}, Color::GRAY, 0.1f);
-  visualizeLine({-0.21f - 0.0125f, -0.45f}, {-0.25f + 0.0125f, -0.45f}, Color::GRAY, 0.1f);
+  visualizeLine({0.21f - 0.125f, -0.45f}, {0.21f + 0.125f, -0.45f}, Color::GRAY, 0.1f);
+  visualizeLine({0.21f - 0.125f, 0.45f}, {0.21f + 0.125f, 0.45f}, Color::GRAY, 0.1f);
+  visualizeLine({-0.21f - 0.125f, 0.45f}, {-0.21f + 0.125f, 0.45f}, Color::GRAY, 0.1f);
+  visualizeLine({-0.21f - 0.125f, -0.45f}, {-0.21f + 0.125f, -0.45f}, Color::GRAY, 0.1f);
 
   visualizePoint({0.0f, -0.415f}, Color::ORANGE, 0.07f);
   visualizePoint({0.0f, 0.415f}, Color::ORANGE, 0.07f);
