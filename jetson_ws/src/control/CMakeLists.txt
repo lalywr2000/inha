@@ -3,7 +3,7 @@ project(control)
 
 find_package(catkin REQUIRED COMPONENTS
   rospy
-  laser_line_extraction
+  laser_line_extraction_msg
 )
 
 catkin_package()
