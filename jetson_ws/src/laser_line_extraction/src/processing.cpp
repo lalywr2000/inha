@@ -127,7 +127,7 @@ float getLineDist(float x1, float y1, float x2, float y2) {
 }
 
 void processing() {
-  laser_line_extraction::NearestWall wall;
+  laser_line_extraction::MainWall wall;
 
   if (line_info.size() > 0) {
     sort(line_info.begin(), line_info.end(), [](const vector<float>& a, const vector<float>& b) { return a[0] < b[0]; });
