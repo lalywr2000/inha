@@ -264,7 +264,7 @@ int main(int argc, char **argv) {
   ros::Subscriber subscription_1 = n.subscribe("/line_segments_1", 1, topic_callback_1);
   ros::Subscriber subscription_2 = n.subscribe("/line_segments_2", 1, topic_callback_2);
 
-  main_wall_ = n.advertise<laser_line_extraction::NearestWall>("/main_wall", 1);
+  main_wall_ = n.advertise<laser_line_extraction::MainWall>("/main_wall", 1);
   visualize_ = n.advertise<visualization_msgs::MarkerArray>("/vis", 1);
 
   ros::spin();
