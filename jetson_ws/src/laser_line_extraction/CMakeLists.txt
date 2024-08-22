@@ -49,10 +49,6 @@ add_executable(processing src/processing.cpp)
 target_link_libraries(processing ${catkin_LIBRARIES})
 add_dependencies(processing laser_line_extraction_generate_messages_cpp)
 
-add_executable(control src/control.cpp)
-target_link_libraries(control ${catkin_LIBRARIES})
-add_dependencies(control laser_line_extraction_generate_messages_cpp)
-
 include_directories(include ${catkin_INCLUDE_DIRS})
 include_directories(include ${EIGEN3_INCLUDE_DIRS})
 
