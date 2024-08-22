@@ -18,6 +18,7 @@ add_message_files(
   FILES
   LineSegment.msg
   LineSegmentList.msg
+  NearestWall.msg
 )
 
 generate_messages(

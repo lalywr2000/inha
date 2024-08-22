@@ -12,6 +12,7 @@
 
 #define RANGE_OF_INTEREST 10.0f
 #define MIN_WALL_LEN 1.0f
+#define DRIVE_WALL_DIST 1.3f 80cm 110cm
 
 using namespace std;
 
@@ -26,7 +27,6 @@ namespace Color {
 }
 
 
-ros::Publisher main_wall_;
 ros::Publisher visualize_;
 
 vector<vector<float>> line_info;
@@ -115,31 +115,28 @@ float getDist(float x1, float y1, float x2, float y2) {
   return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 }
 
-float getIncline(float x1, float y1, float x2, float y2) {
-  return (y2 - y1) / (x2 - x1);
-}
-
 float getLineDist(float x1, float y1, float x2, float y2) {
-  float incline = getIncline(x1, y1, x2, y2);
+  float incline = (y2 - y1) / (x2 - x1);
   float intercept = y1 - incline * x1;
 
   return abs(intercept) / sqrt(incline * incline + 1.0f);
 }
 
 void processing() {
-  laser_line_extraction::NearestWall wall;
-
   if (line_info.size() > 0) {
     sort(line_info.begin(), line_info.end(), [](const vector<float>& a, const vector<float>& b) { return a[0] < b[0]; });
 
-    wall.distance = line_info[0][0];
-    wall.incline = getIncline(line_info[0][1], line_info[0][2], line_info[0][3], line_info[0][4]);
-  } else {
-    wall.distance = -1.0f;
-    wall.incline = 0.0f;
+    cout << (line_info[0][2] - line_info[0][4]) / (line_info[0][1] - line_info[0][3]) << endl;
+
+    // if (line_info[0][0] > DRIVE_WALL_DIST) {
+    //   // action
+    // } else {
+    //   // action
+    // }
+    // make situation and decision here !!! -> publish ctrl topic !!!
   }
 
-  main_wall_.publish(wall);
+  // if no wall is detected situation !!!
 }
 
 void visualize() {
@@ -256,21 +253,19 @@ void topic_callback_2(const laser_line_extraction::LineSegmentList msg) {
   }
 }
 
-
 int main(int argc, char **argv) {
   ros::init(argc, argv, "processing_node");
   ros::NodeHandle n;
 
   ros::Subscriber subscription_1 = n.subscribe("/line_segments_1", 1, topic_callback_1);
   ros::Subscriber subscription_2 = n.subscribe("/line_segments_2", 1, topic_callback_2);
-
-  main_wall_ = n.advertise<laser_line_extraction::NearestWall>("/main_wall", 1);
   visualize_ = n.advertise<visualization_msgs::MarkerArray>("/vis", 1);
 
   ros::spin();
 
   return 0;
 }
+
 
 /*
 2. control to keep the distance. go find wall to certain direction and make it stop.
