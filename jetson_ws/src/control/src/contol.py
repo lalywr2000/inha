@@ -1,5 +1,5 @@
 import rospy
-from laser_line_extraction import MainWall
+from geometry_msgs import Point
 
 
 WALL_DRIVE_DIST = 1.1
@@ -35,14 +35,14 @@ def mission(distance, incline):
 
 
 def msgCallback(msg):
-	mission(msg.distance, msg.incline)
+	mission(msg.x, msg.y)
 
 	return
 
 
 def sub():
 	rospy.init_node('control_node', anonymous=True)
-	rospy.Subscriber("/main_wall", MainWall, msgCallback)
+	rospy.Subscriber("/main_wall", Point, msgCallback)
 
 	rospy.spin()
 

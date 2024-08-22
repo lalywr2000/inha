@@ -1,7 +1,6 @@
 #include "ros/ros.h"
 #include "laser_line_extraction/LineSegment.h"
 #include "laser_line_extraction/LineSegmentList.h"
-#include "laser_line_extraction/MainWall.h"
 #include <geometry_msgs/Point.h>
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
@@ -127,16 +126,16 @@ float getLineDist(float x1, float y1, float x2, float y2) {
 }
 
 void processing() {
-  laser_line_extraction::MainWall wall;
+  geometry_msgs::Point wall;
 
   if (line_info.size() > 0) {
     sort(line_info.begin(), line_info.end(), [](const vector<float>& a, const vector<float>& b) { return a[0] < b[0]; });
 
-    wall.distance = line_info[0][0];
-    wall.incline = getIncline(line_info[0][1], line_info[0][2], line_info[0][3], line_info[0][4]);
+    wall.x = line_info[0][0];
+    wall.y = getIncline(line_info[0][1], line_info[0][2], line_info[0][3], line_info[0][4]);
   } else {
-    wall.distance = -1.0f;
-    wall.incline = 0.0f;
+    wall.x = -1.0f;
+    wall.y = 0.0f;
   }
 
   main_wall_.publish(wall);
@@ -264,7 +263,7 @@ int main(int argc, char **argv) {
   ros::Subscriber subscription_1 = n.subscribe("/line_segments_1", 1, topic_callback_1);
   ros::Subscriber subscription_2 = n.subscribe("/line_segments_2", 1, topic_callback_2);
 
-  main_wall_ = n.advertise<laser_line_extraction::MainWall>("/main_wall", 1);
+  main_wall_ = n.advertise<geometry_msgs::Point>("/main_wall", 1);
   visualize_ = n.advertise<visualization_msgs::MarkerArray>("/vis", 1);
 
   ros::spin();

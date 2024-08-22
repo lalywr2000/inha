@@ -18,7 +18,6 @@ add_message_files(
   FILES
   LineSegment.msg
   LineSegmentList.msg
-  MainWall.msg
 )
 
 generate_messages(
