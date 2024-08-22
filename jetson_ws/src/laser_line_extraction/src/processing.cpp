@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 #include "laser_line_extraction/LineSegment.h"
 #include "laser_line_extraction/LineSegmentList.h"
-#include "laser_line_extraction/NearestWall.h"
+#include "laser_line_extraction/MainWall.h"
 #include <geometry_msgs/Point.h>
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
@@ -271,9 +271,3 @@ int main(int argc, char **argv) {
 
   return 0;
 }
-
-/*
-2. control to keep the distance. go find wall to certain direction and make it stop.
-3. consider the angle of the wall and make it align to the wall.
-4. examine the 4 direction of the wall and follow the wall CCW.
-*/
