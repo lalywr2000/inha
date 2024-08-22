@@ -125,7 +125,7 @@ void processing() {
   if (line_info.size() > 0) {
     sort(line_info.begin(), line_info.end(), [](const vector<float>& a, const vector<float>& b) { return a[0] < b[0]; });
 
-    cout << "Nearest wall dist: " << line_info[0][0] << endl;
+    cout << (line_info[0][2] - line_info[0][4]) / (line_info[0][1] - line_info[0][3]) << endl;
 
     // if (line_info[0][0] > DRIVE_WALL_DIST) {
     //   // action
