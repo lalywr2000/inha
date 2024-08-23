@@ -11,31 +11,30 @@ INCLINE_ALIGN_NOISE_BAND = 0.3
 mission_num = 1
 
 
-def mission_1(distance, incline):
+def mission_1(distance, incline):  # Move Forward
 	global mission_num
 	if (mission_num == 1):
-		print(distance, incline)
-  
+
+		if distance > WALL_DRIVE_DIST:
+			# move forard
+		else:
+			# stop signal
+			mission_num += 1
+
 	return
 
 
-def mission_2(distance, incline):
-	global mission_num
-	if (mission_num == 2):
-		pass
+# def mission_2(distance, incline):
+# 	global mission_num
+# 	if (mission_num == 2):
+# 		pass
 	
-	return
-
-
-def mission(distance, incline):
-	mission_1(distance, incline)
-	mission_2(distance, incline)
-
-	return
+# 	return
 
 
 def msgCallback(msg):
-	mission(msg.x, msg.y)
+	mission_1(msg.x, msg.y)
+	# mission_2(msg.x, msg.y)
 
 	return
 
