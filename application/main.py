@@ -82,7 +82,8 @@ pkg_status = ['', '', '', '', '', '']
 pkg_cursor = None
 
 robot = SerialComm(port='/dev/ttyACM0', baudrate=9600, timeout=1)
-DRIVE_SPEED = 5
+speed, angle, rotation = None, None, None
+DRIVE_SPEED = 3.0
 # speed [km/h], angle [deg], rotation [-1.0: CW, 0.0: N/A, 1.0: CCW]
 
 
@@ -132,7 +133,6 @@ class ImgButton:
 
 class Page:
     def __init__(self):
-        pass
         self.button_list = []
         self.button_list.append(Button(35, 35, 115, 252))
         self.button_list.append(Button(150, 35, 115, 252))
@@ -142,7 +142,8 @@ class Page:
         self.button_list.append(Button(277, 310, 242, 252))
 
     def draw(self):
-        global pkg_cursor
+        global pkg_cursor, speed, angle, rotation
+        speed, angle, rotation = 0.0, 90.0, 0.0
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -215,60 +216,70 @@ class Page:
 
         for i, button in enumerate(self.button_list):
             if button.draw():
-                if pkg_cursor is None and 0 <= i <= 5:
-                    pkg_cursor = i
-                    pkg_status[pkg_cursor] = '_'
 
-                elif pkg_cursor is not None and 1 <= i - 5 <= 10:
-                    if pkg_status[pkg_cursor][-1] == '_':
-                        pkg_status[pkg_cursor] = pkg_status[pkg_cursor][:-1]
+                if pkg_cursor is not None:
 
-                    if len(pkg_status[pkg_cursor]) < 3:
-                        pkg_status[pkg_cursor] += str((i - 5) % 10)
+                    if 1 <= i - 5 <= 10:
+                        if pkg_status[pkg_cursor][-1] == '_':
+                            pkg_status[pkg_cursor] = pkg_status[pkg_cursor][:-1]
 
-                    if len(pkg_status[pkg_cursor]) < 3:
-                        pkg_status[pkg_cursor] += '_'
+                        if len(pkg_status[pkg_cursor]) < 3:
+                            pkg_status[pkg_cursor] += str((i - 5) % 10)
 
-                    time.sleep(0.2)
+                        if len(pkg_status[pkg_cursor]) < 3:
+                            pkg_status[pkg_cursor] += '_'
 
-                elif pkg_cursor is not None and i == 16:
-                    pkg_status[pkg_cursor] = ''
-                    pkg_cursor = None
+                        time.sleep(0.2)
 
-                    time.sleep(0.5)
+                    elif i == 16:
+                        pkg_status[pkg_cursor] = ''
+                        pkg_cursor = None
 
-                elif pkg_cursor is not None and i == 17:
-                    if pkg_status[pkg_cursor][-1] == '_':
-                        pkg_status[pkg_cursor] = pkg_status[pkg_cursor][:-1]
-                    pkg_cursor = None
+                        time.sleep(0.5)
 
-                    time.sleep(0.5)
+                    elif i == 17:
+                        if pkg_status[pkg_cursor][-1] == '_':
+                            pkg_status[pkg_cursor] = pkg_status[pkg_cursor][:-1]
+                        pkg_cursor = None
 
-                elif pkg_cursor is None and i == 6:  # up
-                    angle = 90.0
-                    robot.move_data(DRIVE_SPEED, angle, 0.0)
-                    print('up')
-                elif pkg_cursor is None and i == 7:  # left
-                    angle = 180.0
-                    robot.move_data(DRIVE_SPEED, angle, 0.0)
-                    print('left')
-                elif pkg_cursor is None and i == 8:  # right
-                    angle = 0.0
-                    robot.move_data(DRIVE_SPEED, angle, 0.0)
-                    print('right')
-                elif pkg_cursor is None and i == 9:  # down
-                    angle = 270.0
-                    robot.move_data(DRIVE_SPEED, angle, 0.0)
-                    print('down')
+                        time.sleep(0.5)
 
-                elif pkg_cursor is None and i == 10:  # run
-                    print('run')
+                elif pkg_cursor is None:
 
-                elif pkg_cursor is None and i == 11:  # origin
-                    print('origin')
+                    if 0 <= i <= 5:
+                        pkg_cursor = i
+                        pkg_status[pkg_cursor] = '_'
 
-                elif pkg_cursor is None and i == 12:  # stop
-                    print('stop')
+                    elif i == 6:  # up
+                        speed = DRIVE_SPEED
+                        angle = 90.0
+                        rotation = 0.0
+
+                    elif i == 7:  # left
+                        speed = DRIVE_SPEED
+                        angle = 180.0
+                        rotation = 0.0
+
+                    elif i == 8:  # right
+                        speed = DRIVE_SPEED
+                        angle = 0.0
+                        rotation = 0.0
+
+                    elif i == 9:  # down
+                        speed = DRIVE_SPEED
+                        angle = 270.0
+                        rotation = 0.0
+
+                    elif i == 10:  # run
+                        print('run')
+
+                    elif i == 11:  # origin
+                        print('origin')
+
+                    elif i == 12:  # stop
+                        print('stop')
+
+        robot.move_data(speed, angle, rotation)
 
         while len(self.button_list) > 6:
             self.button_list.pop()
