@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import pygame
 
 
@@ -8,31 +9,71 @@ dir = os.getcwd()
 pygame.init()
 pygame.display.set_caption("inha application")
 screen = pygame.display.set_mode((1028, 600))
-text = pygame.font.SysFont("bold", 80)
+text = pygame.font.SysFont("bold", 60)
 
 background_img = pygame.image.load(dir + r'/object/background.png').convert_alpha()
+
 soffoff_img = pygame.image.load(dir + r'/object/soffoff.png').convert_alpha()
 soffon_img = pygame.image.load(dir + r'/object/soffon.png').convert_alpha()
 sonoff_img = pygame.image.load(dir + r'/object/sonoff.png').convert_alpha()
 sonon_img = pygame.image.load(dir + r'/object/sonon.png').convert_alpha()
+
 boffoff_img = pygame.image.load(dir + r'/object/boffoff.png').convert_alpha()
 boffon_img = pygame.image.load(dir + r'/object/boffon.png').convert_alpha()
 bonoff_img = pygame.image.load(dir + r'/object/bonoff.png').convert_alpha()
 bonon_img = pygame.image.load(dir + r'/object/bonon.png').convert_alpha()
+
+one_img = pygame.image.load(dir + r'/object/one.png').convert_alpha()
+two_img = pygame.image.load(dir + r'/object/two.png').convert_alpha()
+three_img = pygame.image.load(dir + r'/object/three.png').convert_alpha()
+four_img = pygame.image.load(dir + r'/object/four.png').convert_alpha()
+five_img = pygame.image.load(dir + r'/object/five.png').convert_alpha()
+six_img = pygame.image.load(dir + r'/object/six.png').convert_alpha()
+seven_img = pygame.image.load(dir + r'/object/seven.png').convert_alpha()
+eight_img = pygame.image.load(dir + r'/object/eight.png').convert_alpha()
+nine_img = pygame.image.load(dir + r'/object/nine.png').convert_alpha()
 zero_img = pygame.image.load(dir + r'/object/zero.png').convert_alpha()
+
+cancel_img = pygame.image.load(dir + r'/object/cancel.png').convert_alpha()
+ok_img = pygame.image.load(dir + r'/object/ok.png').convert_alpha()
+
+move_img = pygame.image.load(dir + r'/object/move.png').convert_alpha()
+run_img = pygame.image.load(dir + r'/object/run.png').convert_alpha()
+origin_img = pygame.image.load(dir + r'/object/origin.png').convert_alpha()
+stop_img = pygame.image.load(dir + r'/object/stop.png').convert_alpha()
 
 scale_factor = 0.385
 
 background_img = pygame.transform.scale(background_img, (int(background_img.get_size()[0] * scale_factor), int(background_img.get_size()[1] * scale_factor)))
+
 soffoff_img = pygame.transform.scale(soffoff_img, (int(soffoff_img.get_size()[0] * scale_factor), int(soffoff_img.get_size()[1] * scale_factor)))
 soffon_img = pygame.transform.scale(soffon_img, (int(soffon_img.get_size()[0] * scale_factor), int(soffon_img.get_size()[1] * scale_factor)))
 sonoff_img = pygame.transform.scale(sonoff_img, (int(sonoff_img.get_size()[0] * scale_factor), int(sonoff_img.get_size()[1] * scale_factor)))
 sonon_img = pygame.transform.scale(sonon_img, (int(sonon_img.get_size()[0] * scale_factor), int(sonon_img.get_size()[1] * scale_factor)))
+
 boffoff_img = pygame.transform.scale(boffoff_img, (int(boffoff_img.get_size()[0] * scale_factor), int(boffoff_img.get_size()[1] * scale_factor)))
 boffon_img = pygame.transform.scale(boffon_img, (int(boffon_img.get_size()[0] * scale_factor), int(boffon_img.get_size()[1] * scale_factor)))
 bonoff_img = pygame.transform.scale(bonoff_img, (int(bonoff_img.get_size()[0] * scale_factor), int(bonoff_img.get_size()[1] * scale_factor)))
 bonon_img = pygame.transform.scale(bonon_img, (int(bonon_img.get_size()[0] * scale_factor), int(bonon_img.get_size()[1] * scale_factor)))
+
+one_img = pygame.transform.scale(one_img, (int(one_img.get_size()[0] * scale_factor), int(one_img.get_size()[1] * scale_factor)))
+two_img = pygame.transform.scale(two_img, (int(two_img.get_size()[0] * scale_factor), int(two_img.get_size()[1] * scale_factor)))
+three_img = pygame.transform.scale(three_img, (int(three_img.get_size()[0] * scale_factor), int(three_img.get_size()[1] * scale_factor)))
+four_img = pygame.transform.scale(four_img, (int(four_img.get_size()[0] * scale_factor), int(four_img.get_size()[1] * scale_factor)))
+five_img = pygame.transform.scale(five_img, (int(five_img.get_size()[0] * scale_factor), int(five_img.get_size()[1] * scale_factor)))
+six_img = pygame.transform.scale(six_img, (int(six_img.get_size()[0] * scale_factor), int(six_img.get_size()[1] * scale_factor)))
+seven_img = pygame.transform.scale(seven_img, (int(seven_img.get_size()[0] * scale_factor), int(seven_img.get_size()[1] * scale_factor)))
+eight_img = pygame.transform.scale(eight_img, (int(eight_img.get_size()[0] * scale_factor), int(eight_img.get_size()[1] * scale_factor)))
+nine_img = pygame.transform.scale(nine_img, (int(nine_img.get_size()[0] * scale_factor), int(nine_img.get_size()[1] * scale_factor)))
 zero_img = pygame.transform.scale(zero_img, (int(zero_img.get_size()[0] * scale_factor), int(zero_img.get_size()[1] * scale_factor)))
+
+cancel_img = pygame.transform.scale(cancel_img, (int(cancel_img.get_size()[0] * scale_factor), int(cancel_img.get_size()[1] * scale_factor)))
+ok_img = pygame.transform.scale(ok_img, (int(ok_img.get_size()[0] * scale_factor), int(ok_img.get_size()[1] * scale_factor)))
+
+move_img = pygame.transform.scale(move_img, (int(move_img.get_size()[0] * scale_factor), int(move_img.get_size()[1] * scale_factor)))
+run_img = pygame.transform.scale(run_img, (int(run_img.get_size()[0] * scale_factor), int(run_img.get_size()[1] * scale_factor)))
+origin_img = pygame.transform.scale(origin_img, (int(origin_img.get_size()[0] * scale_factor), int(origin_img.get_size()[1] * scale_factor)))
+stop_img = pygame.transform.scale(stop_img, (int(stop_img.get_size()[0] * scale_factor), int(stop_img.get_size()[1] * scale_factor)))
 
 
 pkg_status = ['', '', '', '', '', '']
@@ -131,13 +172,70 @@ class Page:
         elif pkg_status[4] and pkg_status[5]:
             screen.blit(bonon_img, (35, 310))
 
+        screen.blit(text.render(pkg_status[0], True, (0, 0, 0)), (63, 223))
+        screen.blit(text.render(pkg_status[1], True, (0, 0, 0)), (165, 223))
+        screen.blit(text.render(pkg_status[2], True, (0, 0, 0)), (317, 223))
+        screen.blit(text.render(pkg_status[3], True, (0, 0, 0)), (419, 223))
+        screen.blit(text.render(pkg_status[4], True, (0, 0, 0)), (125, 495))
+        screen.blit(text.render(pkg_status[5], True, (0, 0, 0)), (358, 495))
+
+        if pkg_cursor is None:
+            screen.blit(move_img, (625, 35))
+
+        if pkg_cursor is None:
+            # self.button_list.append(Button(277, 310, 242, 252)) up down l r 294 294 img size
+            # self.button_list.append(Button(277, 310, 242, 252)) up down l r
+            # self.button_list.append(Button(277, 310, 242, 252)) up down l r
+            # self.button_list.append(Button(277, 310, 242, 252)) up down l r
+
+            self.button_list.append(ImgButton(552, 352, run_img))
+            self.button_list.append(ImgButton(552, 467, origin_img))
+            self.button_list.append(ImgButton(783, 467, stop_img))
+
         if pkg_cursor is not None:
-            screen.blit(zero_img, (500, 200)) # no not this make it as button
+            self.button_list.append(ImgButton(620, 75, one_img))
+            self.button_list.append(ImgButton(620 + 95, 75, two_img))
+            self.button_list.append(ImgButton(620 + 190, 75, three_img))
+            self.button_list.append(ImgButton(620, 190, four_img))
+            self.button_list.append(ImgButton(620 + 95, 190, five_img))
+            self.button_list.append(ImgButton(620 + 190, 190, six_img))
+            self.button_list.append(ImgButton(620, 305, seven_img))
+            self.button_list.append(ImgButton(620 + 95, 305, eight_img))
+            self.button_list.append(ImgButton(620 + 190, 305, nine_img))
+            self.button_list.append(ImgButton(620 + 95, 420, zero_img))
+
+            self.button_list.append(ImgButton(551, 426, cancel_img))
+            self.button_list.append(ImgButton(825, 426, ok_img))
 
         for i, button in enumerate(self.button_list):
             if button.draw():
-                pkg_status[i] = '_'
-                pkg_cursor = i
+                if pkg_cursor is None and 0 <= i <= 5:
+                    pkg_cursor = i
+                    pkg_status[pkg_cursor] = '_'
+
+                elif pkg_cursor is not None and 1 <= i - 5 <= 10:
+                    if pkg_status[pkg_cursor][-1] == '_':
+                        pkg_status[pkg_cursor] = pkg_status[pkg_cursor][:-1]
+
+                    if len(pkg_status[pkg_cursor]) < 3:
+                        pkg_status[pkg_cursor] += str((i - 5) % 10)
+
+                    if len(pkg_status[pkg_cursor]) < 3:
+                        pkg_status[pkg_cursor] += '_'
+
+                    time.sleep(0.2)
+
+                elif pkg_cursor is not None and i == 16:
+                    pkg_status[pkg_cursor] = ''
+                    pkg_cursor = None
+
+                elif pkg_cursor is not None and i == 17:
+                    if pkg_status[pkg_cursor][-1] == '_':
+                        pkg_status[pkg_cursor] = pkg_status[pkg_cursor][:-1]
+                    pkg_cursor = None
+
+        while len(self.button_list) > 6:
+            self.button_list.pop()
 
         return
 
@@ -147,9 +245,4 @@ page = Page()
 while True:
     page.draw()
     pygame.display.update()
-
-    # print(boffoff_img.get_size())
-
-
-
-# screen.blit(text.render("1234", True, (255, 80, 120)), (0, 0))
+    
