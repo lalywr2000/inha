@@ -10,7 +10,7 @@ dir = os.getcwd()
 
 pygame.init()
 pygame.display.set_caption("inha application")
-screen = pygame.display.set_mode((1028, 600))
+screen = pygame.display.set_mode((1028, 600), pygame.FULLSCREEN)
 text = pygame.font.SysFont("bold", 60)
 
 background_img = pygame.image.load(dir + r'/object/background.png').convert_alpha()
@@ -42,7 +42,8 @@ ok_img = pygame.image.load(dir + r'/object/ok.png').convert_alpha()
 move_img = pygame.image.load(dir + r'/object/move.png').convert_alpha()
 run_img = pygame.image.load(dir + r'/object/run.png').convert_alpha()
 origin_img = pygame.image.load(dir + r'/object/origin.png').convert_alpha()
-stop_img = pygame.image.load(dir + r'/object/stop.png').convert_alpha()
+stopoff_img = pygame.image.load(dir + r'/object/stopoff.png').convert_alpha()
+stopon_img = pygame.image.load(dir + r'/object/stopon.png').convert_alpha()
 
 scale_factor = 0.385
 
@@ -75,13 +76,15 @@ ok_img = pygame.transform.scale(ok_img, (int(ok_img.get_size()[0] * scale_factor
 move_img = pygame.transform.scale(move_img, (int(move_img.get_size()[0] * scale_factor), int(move_img.get_size()[1] * scale_factor)))
 run_img = pygame.transform.scale(run_img, (int(run_img.get_size()[0] * scale_factor), int(run_img.get_size()[1] * scale_factor)))
 origin_img = pygame.transform.scale(origin_img, (int(origin_img.get_size()[0] * scale_factor), int(origin_img.get_size()[1] * scale_factor)))
-stop_img = pygame.transform.scale(stop_img, (int(stop_img.get_size()[0] * scale_factor), int(stop_img.get_size()[1] * scale_factor)))
+stopoff_img = pygame.transform.scale(stopoff_img, (int(stopoff_img.get_size()[0] * scale_factor), int(stopoff_img.get_size()[1] * scale_factor)))
+stopon_img = pygame.transform.scale(stopon_img, (int(stopon_img.get_size()[0] * scale_factor), int(stopon_img.get_size()[1] * scale_factor)))
 
 
 pkg_status = ['', '', '', '', '', '']
 pkg_cursor = None
 
 robot = SerialComm(port='/dev/ttyACM0', baudrate=9600, timeout=1)
+lock = False
 speed, angle, rotation = None, None, None
 DRIVE_SPEED = 3.0
 # speed [km/h], angle [deg], rotation [-1.0: CW, 0.0: N/A, 1.0: CCW]
@@ -142,7 +145,7 @@ class Page:
         self.button_list.append(Button(277, 310, 242, 252))
 
     def draw(self):
-        global pkg_cursor, speed, angle, rotation
+        global pkg_cursor, lock, speed, angle, rotation
         speed, angle, rotation = 0.0, 90.0, 0.0
 
         for event in pygame.event.get():
@@ -197,7 +200,11 @@ class Page:
 
             self.button_list.append(ImgButton(552, 352, run_img))
             self.button_list.append(ImgButton(552, 467, origin_img))
-            self.button_list.append(ImgButton(783, 467, stop_img))
+
+            if lock:
+                self.button_list.append(ImgButton(783, 467, stopon_img))
+            else:
+                self.button_list.append(ImgButton(783, 467, stopoff_img))
 
         if pkg_cursor is not None:
             self.button_list.append(ImgButton(620, 75, one_img))
@@ -277,9 +284,10 @@ class Page:
                         print('origin')
 
                     elif i == 12:  # stop
-                        print('stop')
+                        lock = not lock
 
-        robot.move_data(speed, angle, rotation)
+        if not lock:
+            robot.move_data(speed, angle, rotation)
 
         while len(self.button_list) > 6:
             self.button_list.pop()
@@ -289,12 +297,8 @@ class Page:
 
 page = Page()
 
-try:
-    while True:
-        page.draw()
-        pygame.display.update()
-except KeyboardInterrupt:
-    pass
-finally:
-    robot.kill()
-    robot.close()
+while True:
+    page.draw()
+    pygame.display.update()
+
+# axis origin
