@@ -183,10 +183,10 @@ class Page:
             screen.blit(move_img, (625, 35))
 
         if pkg_cursor is None:
-            # self.button_list.append(Button(277, 310, 242, 252)) up down l r 294 294 img size
-            # self.button_list.append(Button(277, 310, 242, 252)) up down l r
-            # self.button_list.append(Button(277, 310, 242, 252)) up down l r
-            # self.button_list.append(Button(277, 310, 242, 252)) up down l r
+            self.button_list.append(Button(625 + 98, 35, 98, 98))  # up
+            self.button_list.append(Button(625, 35 + 98, 98, 98))  # left
+            self.button_list.append(Button(625 + 98 + 98, 35 + 98, 98, 98))  # right
+            self.button_list.append(Button(625 + 98, 35 + 98 + 98, 98, 98))  # down
 
             self.button_list.append(ImgButton(552, 352, run_img))
             self.button_list.append(ImgButton(552, 467, origin_img))
@@ -229,10 +229,35 @@ class Page:
                     pkg_status[pkg_cursor] = ''
                     pkg_cursor = None
 
+                    time.sleep(0.5)
+
                 elif pkg_cursor is not None and i == 17:
                     if pkg_status[pkg_cursor][-1] == '_':
                         pkg_status[pkg_cursor] = pkg_status[pkg_cursor][:-1]
                     pkg_cursor = None
+
+                    time.sleep(0.5)
+
+                elif pkg_cursor is None and i == 6:  # up
+                    print('up')
+
+                elif pkg_cursor is None and i == 7:  # left
+                    print('left')
+
+                elif pkg_cursor is None and i == 8:  # right
+                    print('right')
+
+                elif pkg_cursor is None and i == 9:  # down
+                    print('down')
+
+                elif pkg_cursor is None and i == 10:  # run
+                    print('run')
+
+                elif pkg_cursor is None and i == 11:  # origin
+                    print('origin')
+
+                elif pkg_cursor is None and i == 12:  # stop
+                    print('stop')
 
         while len(self.button_list) > 6:
             self.button_list.pop()
