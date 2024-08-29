@@ -3,6 +3,8 @@ import sys
 import time
 import pygame
 
+from mecanumwheel import SerialComm
+
 
 dir = os.getcwd()
 
@@ -78,6 +80,10 @@ stop_img = pygame.transform.scale(stop_img, (int(stop_img.get_size()[0] * scale_
 
 pkg_status = ['', '', '', '', '', '']
 pkg_cursor = None
+
+robot = SerialComm(port='/dev/ttyACM0', baudrate=9600, timeout=1)
+DRIVE_SPEED = 5
+# speed [km/h], angle [deg], rotation [-1.0: CW, 0.0: N/A, 1.0: CCW]
 
 
 class Button:
@@ -239,15 +245,20 @@ class Page:
                     time.sleep(0.5)
 
                 elif pkg_cursor is None and i == 6:  # up
+                    angle = 90.0
+                    robot.move_data(DRIVE_SPEED, angle, 0.0)
                     print('up')
-
                 elif pkg_cursor is None and i == 7:  # left
+                    angle = 180.0
+                    robot.move_data(DRIVE_SPEED, angle, 0.0)
                     print('left')
-
                 elif pkg_cursor is None and i == 8:  # right
+                    angle = 0.0
+                    robot.move_data(DRIVE_SPEED, angle, 0.0)
                     print('right')
-
                 elif pkg_cursor is None and i == 9:  # down
+                    angle = 270.0
+                    robot.move_data(DRIVE_SPEED, angle, 0.0)
                     print('down')
 
                 elif pkg_cursor is None and i == 10:  # run
@@ -267,7 +278,12 @@ class Page:
 
 page = Page()
 
-while True:
-    page.draw()
-    pygame.display.update()
-    
+try:
+    while True:
+        page.draw()
+        pygame.display.update()
+except KeyboardInterrupt:
+    pass
+finally:
+    robot.kill()
+    robot.close()
