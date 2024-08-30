@@ -3,10 +3,10 @@ import sys
 import time
 import pygame
 
-from mecanumwheel import SerialComm
+# from mecanumwheel import SerialComm
 
-import rospy
-from std_msgs.msg import String
+# import rospy
+# from std_msgs.msg import String
 
 
 dir = os.getcwd()
@@ -14,7 +14,8 @@ dir = os.getcwd()
 
 pygame.init()
 pygame.display.set_caption("inha application")
-screen = pygame.display.set_mode((1028, 600), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)  # display: 1280x720
+# screen = pygame.display.set_mode((1028, 600), pygame.FULLSCREEN)
 text = pygame.font.SysFont("bold", 60)
 
 
@@ -50,7 +51,7 @@ origin_img = pygame.image.load(dir + r'/object/origin.png').convert_alpha()
 stopoff_img = pygame.image.load(dir + r'/object/stopoff.png').convert_alpha()
 stopon_img = pygame.image.load(dir + r'/object/stopon.png').convert_alpha()
 
-scale_factor = 0.385
+scale_factor = 0.46
 
 background_img = pygame.transform.scale(background_img, (int(background_img.get_size()[0] * scale_factor), int(background_img.get_size()[1] * scale_factor)))
 
@@ -89,16 +90,16 @@ pkg_status = ['', '', '', '', '', '']
 pkg_cursor = None
 
 
-robot = SerialComm(port='/dev/ttyACM0', baudrate=9600, timeout=1)
+# robot = SerialComm(port='/dev/ttyACM0', baudrate=9600, timeout=1)
 lock = False
 # speed [km/h], angle [deg], rotation [-1.0: CW, 0.0: N/A, 1.0: CCW]
 speed, angle, rotation = None, None, None
 DRIVE_SPEED = 3.0
 
 
-rospy.init_node('application_node', anonymous=True)
-pub = rospy.Publisher('/stepper/input', String, queue_size=1)
-msg = String()
+# rospy.init_node('application_node', anonymous=True)
+# pub = rospy.Publisher('/stepper/input', String, queue_size=1)
+# msg = String()
 
 
 class Button:
@@ -164,7 +165,7 @@ class Page:
                 pygame.quit()
                 sys.exit()
 
-        screen.blit(background_img, (0, 0))
+        screen.blit(background_img, (25, 0))
 
         if not pkg_status[0] and not pkg_status[1]:
             screen.blit(soffoff_img, (35, 35))
@@ -292,14 +293,16 @@ class Page:
                         pass  # give permission to gamepad controller
 
                     elif i == 11:  # origin
-                        msg.data = "0,0,0,0,0,0"
-                        pub.publish(msg)
+                        pass
+                        # msg.data = "0,0,0,0,0,0"
+                        # pub.publish(msg)
 
                     elif i == 12:  # stop
                         lock = not lock
 
         if not lock:
-            robot.move_data(speed, angle, rotation)
+            pass
+            # robot.move_data(speed, angle, rotation)
 
         while len(self.button_list) > 6:
             self.button_list.pop()
