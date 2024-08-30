@@ -295,6 +295,8 @@ class Page:
                         msg.data = "a"
                         pub.publish(msg)
 
+                        time.sleep(0.3)
+
                     elif i == 12:  # stop
                         lock = not lock
 
