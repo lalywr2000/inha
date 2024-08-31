@@ -7,7 +7,7 @@ from mecanumwheel import SerialComm
 
 import rospy
 from std_msgs.msg import String
-from geometry_msgs import Point
+from geometry_msgs.msg import Point
 
 
 dir = os.getcwd()
@@ -102,16 +102,25 @@ pub = rospy.Publisher('/stepper/input', String, queue_size=1)
 msg = String()
 
 
+mission = False
 mission_num = 1
 mission_speed = 5.0
 mission_wall_distance = 1.0
 cnt = 0
 
 def msgCallback(msg):
-    global mission_num, mission_speed, mission_wall_distance, cnt
+    global mission, mission_num, mission_speed, mission_wall_distance, cnt
     distance, incline = msg.x, msg.y
 
+    if not mission:
+        return
+
     if cnt > 1000:
+        speed = 0.0
+        angle = 90.0
+        rotation = 0.0
+        robot.move_data(speed, angle, rotation)
+
         sys.exit()
 
     if (mission_num == 1):  # go straight
@@ -127,7 +136,7 @@ def msgCallback(msg):
             robot.move_data(speed, angle, rotation)
 
             mission_num += 1
-            time.sleep(1)
+            time.sleep(3)
 
     elif (mission_num == 2):  # rotate clockwise
         if not (-0.1 < incline < 0.1):
@@ -142,7 +151,7 @@ def msgCallback(msg):
             robot.move_data(speed, angle, rotation)
 
             mission_num += 1
-            time.sleep(1)
+            time.sleep(3)
 
     elif (mission_num == 3):  # go backward
         if mission_wall_distance - 0.25 < distance < mission_wall_distance + 0.25:
@@ -224,7 +233,7 @@ class Page:
         self.button_list.append(Button(65 + 290, 375, 290, 301))
 
     def draw(self):
-        global pkg_cursor, lock, speed, angle, rotation, distance, incline
+        global pkg_cursor, lock, speed, angle, rotation, mission
         speed, angle, rotation = 0.0, 90.0, 0.0
 
         for event in pygame.event.get():
@@ -357,15 +366,10 @@ class Page:
                         rotation = 0.0
 
                     elif i == 10:  # run
-                        ##################################################
-                        # Switch to controller - Elevator
-                        lock = not lock
+                        mission = not mission
 
-                        ##################################################
-                        # Autonomous driving - Hallway
-                        rospy.spin()
+                        time.sleep(0.3)
 
-                        ##################################################
                     elif i == 11:  # origin
                         msg.data = "a"
                         pub.publish(msg)
