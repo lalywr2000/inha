@@ -7,6 +7,7 @@ from mecanumwheel import SerialComm
 
 import rospy
 from std_msgs.msg import String
+from geometry_msgs import Point
 
 
 dir = os.getcwd()
@@ -101,6 +102,73 @@ pub = rospy.Publisher('/stepper/input', String, queue_size=1)
 msg = String()
 
 
+mission_num = 1
+mission_speed = 5.0
+mission_wall_distance = 1.0
+cnt = 0
+
+def msgCallback(msg):
+    global mission_num, mission_speed, mission_wall_distance, cnt
+    distance, incline = msg.x, msg.y
+
+    if cnt > 1000:
+        sys.exit()
+
+    if (mission_num == 1):  # go straight
+        if distance > mission_wall_distance:
+            speed = mission_speed
+            angle = 90.0
+            rotation = 0.0
+            robot.move_data(speed, angle, rotation)
+        else:
+            speed = 0.0
+            angle = 90.0
+            rotation = 0.0
+            robot.move_data(speed, angle, rotation)
+
+            mission_num += 1
+            time.sleep(1)
+
+    elif (mission_num == 2):  # rotate clockwise
+        if not (-0.1 < incline < 0.1):
+            speed = 0.0
+            angle = 90.0
+            rotation = -1.0
+            robot.move_data(speed, angle, rotation)
+        else:
+            speed = 0.0
+            angle = 90.0
+            rotation = 0.0
+            robot.move_data(speed, angle, rotation)
+
+            mission_num += 1
+            time.sleep(1)
+
+    elif (mission_num == 3):  # go backward
+        if mission_wall_distance - 0.25 < distance < mission_wall_distance + 0.25:
+            speed = mission_speed
+            angle = 270.0
+            rotation = 0.0
+            robot.move_data(speed, angle, rotation)
+        elif mission_wall_distance - 0.25 > distance:
+            speed = mission_speed
+            angle = 270.0
+            rotation = 1.0
+            robot.move_data(speed, angle, rotation)
+        elif distance > mission_wall_distance + 0.25:
+            speed = mission_speed
+            angle = 270.0
+            rotation = -1.0
+            robot.move_data(speed, angle, rotation)
+        
+        cnt += 1
+
+    return
+
+
+rospy.Subscriber("/main_wall", Point, msgCallback)
+
+
 class Button:
     def __init__(self, x, y, w, h):
         self.rect = pygame.Rect(x, y, w, h)
@@ -156,7 +224,7 @@ class Page:
         self.button_list.append(Button(65 + 290, 375, 290, 301))
 
     def draw(self):
-        global pkg_cursor, lock, speed, angle, rotation
+        global pkg_cursor, lock, speed, angle, rotation, distance, incline
         speed, angle, rotation = 0.0, 90.0, 0.0
 
         for event in pygame.event.get():
@@ -289,8 +357,15 @@ class Page:
                         rotation = 0.0
 
                     elif i == 10:  # run
-                        pass
+                        ##################################################
+                        # Switch to controller - Elevator
+                        lock = not lock
 
+                        ##################################################
+                        # Autonomous driving - Hallway
+                        rospy.spin()
+
+                        ##################################################
                     elif i == 11:  # origin
                         msg.data = "a"
                         pub.publish(msg)
