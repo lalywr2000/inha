@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
   ros::Publisher pub = n.advertise<sensor_msgs::LaserScan>("scan_1", 1);
   ros::Rate loop_rate(15);
 
-  str_optval = "/dev/lidar_1";
+  str_optval = "/dev/ttyUSB1";
   laser.setlidaropt(LidarPropSerialPort, str_optval.c_str(), str_optval.size());
   int_optval = 128000;
   laser.setlidaropt(LidarPropSerialBaudrate, &int_optval, sizeof(int));
