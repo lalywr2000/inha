@@ -183,10 +183,10 @@ while True:
 
     if x:
         print('x')
-        msg.data = "0,0,1,0,0,0"
+        msg.data = "0,0,1,0,0,0\n"
     if y:
         print('y')
-        msg.data = "0,0,0,1,0,0"
+        msg.data = "0,0,0,1,0,0\n"
     if a:
         print('a')
         msg.data = "???"
