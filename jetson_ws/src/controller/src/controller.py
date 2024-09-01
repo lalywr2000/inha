@@ -8,7 +8,8 @@ from mecanumwheel import SerialComm
 
 
 rospy.init_node('controller_node', anonymous=True)
-pub = rospy.Publisher('/stepper/input', String, queue_size=1)
+stepper_pub = rospy.Publisher('/stepper/input', String, queue_size=1)
+button_pub = rospy.Publisher('/targetbutton', String, queue_size=1)
 msg = String()
 
 shanwan_gamepad = ShanWanGamepad()
@@ -181,18 +182,22 @@ while True:
     b = gamepad_input.button_b
     y = gamepad_input.button_y
 
-    if x:
-        print('x')
-        msg.data = "0,0,1,0,0,0"
-        pub.publish(msg)
-    if y:
+    if y:  # drop
         print('y')
         msg.data = "0,0,0,1,0,0"
-        pub.publish(msg)
+        stepper_pub.publish(msg)
 
-    # if a:
-    #     print('a')
-    #     msg.data = "???"
-    # if b:
-    #     print('b')
-    #     msg.data = "???"
+    if x:  # down
+        print('x')
+        msg.data = "down"
+        button_pub.publish(msg)
+    
+    if a:  # 2 button
+        print('a')
+        msg.data = "2"
+        button_pub.publish(msg)
+    
+    if b:  # 4 button
+        print('b')
+        msg.data = "4"
+        button_pub.publish(msg)
