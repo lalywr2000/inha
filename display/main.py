@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
 text = pygame.font.SysFont("bold", 75)
 
 
-background_img = pygame.image.load(dir + r'/object/obj.png').convert_alpha()
+display_img = pygame.image.load(dir + r'/object/display.png').convert_alpha()
 
 # scale_factor = 0.46
 
@@ -25,7 +25,7 @@ class Page:
                 pygame.quit()
                 sys.exit()
 
-        screen.blit(background_img, (0, 0))
+        screen.blit(display_img, (0, 0))
 
         # screen.blit(text.render("asdfasdf", True, (0, 0, 0)), (97, 263))
 
