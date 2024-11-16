@@ -24,7 +24,7 @@ display_img = pygame.transform.scale(display_img, (int(display_img.get_size()[0]
 warn1_img = pygame.transform.scale(warn1_img, (int(warn1_img.get_size()[0] * scale_factor), int(warn1_img.get_size()[1] * scale_factor)))
 warn2_img = pygame.transform.scale(warn2_img, (int(warn2_img.get_size()[0] * scale_factor), int(warn2_img.get_size()[1] * scale_factor)))
 
-warning = True
+warning = False
 warn_screen = False
 
 
