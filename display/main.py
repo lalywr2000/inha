@@ -59,9 +59,9 @@ class Page:
 
         if warning:
             if warn_screen:
-                screen.blit(warn1_img, (2, -56))
+                screen.blit(warn1_img, (3, -56))
             else:
-                screen.blit(warn2_img, (2, -56))
+                screen.blit(warn2_img, (3, -56))
 
             time.sleep(0.5)
             warn_screen = not warn_screen
