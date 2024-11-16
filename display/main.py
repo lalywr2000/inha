@@ -28,7 +28,7 @@ warn2_img = pygame.transform.scale(warn2_img, (int(warn2_img.get_size()[0] * sca
 warning = False
 warn_screen = False
 
-ser = serial.Serial('ttyACM0', 115200, timeout=0.1)
+ser = serial.Serial('/dev/ttyACM0', 115200, timeout=0.1)
 
 class Page:
     def draw(self):
