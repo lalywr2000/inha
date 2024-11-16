@@ -25,9 +25,11 @@ class Page:
                 pygame.quit()
                 sys.exit()
 
-        screen.blit(background_img, (25, 0))
+        # screen.blit(background_img, (25, 0))
 
-        screen.blit(text.render("asdfasdf", True, (0, 0, 0)), (97, 263))
+        # screen.blit(text.render("asdfasdf", True, (0, 0, 0)), (97, 263))
+
+        screen.fill((255, 255, 255))
 
         return
 
