@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
 text = pygame.font.SysFont("bold", 75)
 
 
-background_img = pygame.image.load(dir + r'/object/background.png').convert_alpha()
+background_img = pygame.image.load(dir + r'/object/obj.png').convert_alpha()
 
 # scale_factor = 0.46
 
