@@ -11,7 +11,7 @@ pygame.init()
 pygame.display.set_caption("inha application")
 screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
 small_text = pygame.font.SysFont("Arial", 50)
-big_text = pygame.font.SysFont("Arial", 130)
+big_text = pygame.font.SysFont("Arial", 140)
 
 
 display_img = pygame.image.load(dir + r'/object/display.png').convert_alpha()
