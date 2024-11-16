@@ -43,10 +43,10 @@ class Page:
         True, (255, 255, 255)), 90), (35, 370))
         if second % 2 == 0:
             screen.blit(pygame.transform.rotate(big_text.render(str(hour).zfill(2) + ':' + str(minute).zfill(2),
-            True, (255, 255, 255)), 90), (100, 320))
+            True, (255, 255, 255)), 90), (100, 330))
         else:
             screen.blit(pygame.transform.rotate(big_text.render(str(hour).zfill(2) + ' ' + str(minute).zfill(2),
-            True, (255, 255, 255)), 90), (100, 320))
+            True, (255, 255, 255)), 90), (100, 330))
 
         return
 
