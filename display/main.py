@@ -30,6 +30,7 @@ class Page:
         # screen.blit(text.render("asdfasdf", True, (0, 0, 0)), (97, 263))
 
         screen.fill((255, 255, 255))
+        pygame.draw.rect(screen, (0, 0, 0), (0, 0, 20, 20))
 
         return
 
