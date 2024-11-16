@@ -13,9 +13,9 @@ text = pygame.font.SysFont("bold", 75)
 
 background_img = pygame.image.load(dir + r'/object/background.png').convert_alpha()
 
-scale_factor = 0.46
+# scale_factor = 0.46
 
-background_img = pygame.transform.scale(background_img, (int(background_img.get_size()[0] * scale_factor), int(background_img.get_size()[1] * scale_factor)))
+# background_img = pygame.transform.scale(background_img, (int(background_img.get_size()[0] * scale_factor), int(background_img.get_size()[1] * scale_factor)))
     
 
 class Page:
@@ -25,13 +25,13 @@ class Page:
                 pygame.quit()
                 sys.exit()
 
-        # screen.blit(background_img, (25, 0))
+        screen.blit(background_img, (0, 0))
 
         # screen.blit(text.render("asdfasdf", True, (0, 0, 0)), (97, 263))
 
-        screen.fill((255, 255, 255))
-        pygame.draw.rect(screen, (0, 0, 0), (0, 0, 20, 20))
-        pygame.draw.rect(screen, (0, 0, 0), (1260, 700, 20, 20))
+        # screen.fill((255, 255, 255))
+        # pygame.draw.rect(screen, (0, 0, 0), (0, 0, 20, 20))
+        # pygame.draw.rect(screen, (0, 0, 0), (1260, 700, 20, 20))
 
         return
 
