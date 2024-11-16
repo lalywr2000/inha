@@ -13,7 +13,7 @@ text = pygame.font.SysFont("bold", 75)
 
 display_img = pygame.image.load(dir + r'/object/display.png').convert_alpha()
 
-scale_factor = 0.415
+scale_factor = 0.43
 
 display_img = pygame.transform.scale(display_img, (int(display_img.get_size()[0] * scale_factor), int(display_img.get_size()[1] * scale_factor)))
     
