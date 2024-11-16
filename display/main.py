@@ -31,6 +31,7 @@ class Page:
 
         screen.fill((255, 255, 255))
         pygame.draw.rect(screen, (0, 0, 0), (0, 0, 20, 20))
+        pygame.draw.rect(screen, (0, 0, 0), (1260, 700, 20, 20))
 
         return
 
